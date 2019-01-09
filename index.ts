@@ -34,13 +34,13 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityEditFormUrl(groupId: string): Promise<string> {
+    public async GetEntityEditFormUrl(groupId: string, sourceUrl: string): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 this.GetEntityItemId(groupId),
                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
-            return `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}&Source=${encodeURIComponent(this.webUrl)}`;
+            return `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}&Source=${encodeURIComponent(sourceUrl)}`;
         } catch (e) {
             throw e;
         }
