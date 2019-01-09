@@ -1,4 +1,4 @@
-import { Web, List } from '@pnp/sp';
+import { Web, List, ItemAddResult } from '@pnp/sp';
 
 export default class SpEntityPortalService {
     public web: Web;
@@ -25,10 +25,22 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityItemId(groupId: string): Promise<any> {
+    public async GetEntityItemId(groupId: string): Promise<number> {
         try {
             const item = await this.GetEntityItem(groupId);
             return item.Id;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async GetEntityEditFormUrl(groupId: string): Promise<string> {
+        try {
+            const [itemId, { DefaultEditFormUrl }] = await Promise.all([
+                this.GetEntityItemId(groupId),
+                this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+            ]);
+            return `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}&Source=${encodeURIComponent(this.webUrl)}`;
         } catch (e) {
             throw e;
         }
@@ -38,6 +50,16 @@ export default class SpEntityPortalService {
         try {
             const itemId = await this.GetEntityItemId(groupId);
             await this.list.items.getById(itemId).update(properties);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async NewEntity(title: string, groupId: string): Promise<ItemAddResult> {
+        try {
+            let properties = { Title: title };
+            properties[this.groupIdFieldName] = groupId;
+            return await this.list.items.add(properties);
         } catch (e) {
             throw e;
         }

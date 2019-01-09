@@ -1,5 +1,6 @@
 dependencies:
   '@pnp/common': 1.2.7
+  '@pnp/logging': 1.2.7
   '@pnp/odata': 1.2.7
   '@pnp/sp': 1.2.7
 packages:
@@ -10,6 +11,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-4tja4zjAHhNZwhkcAhG8MPInFHIlspb7jz/Sk/wCbNCrobNSBGt9hoSvMBAOxYIhUinflCOWmGhk3Xw6vk8EXg==
+  /@pnp/logging/1.2.7:
+    dependencies:
+      tslib: 1.9.3
+    dev: false
+    resolution:
+      integrity: sha512-3OlO5o7dfP7q0bAfeZ6sHn3BBYfPM3rpw0w+aZGju84MjM7YcdLS2U5JlXMjb0eKwyA0kZOZeJNLt0l0vuGKrA==
   /@pnp/odata/1.2.7:
     dependencies:
       tslib: 1.9.3
@@ -44,5 +51,6 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   '@pnp/common': ^1.2.7
+  '@pnp/logging': ^1.2.7
   '@pnp/odata': ^1.2.7
   '@pnp/sp': ^1.2.7
