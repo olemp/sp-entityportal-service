@@ -37,19 +37,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
 var SpEntityPortalService = /** @class */ (function () {
-    function SpEntityPortalService(webUrl, listName, groupIdFieldName) {
+    function SpEntityPortalService(webUrl, listName, groupIdFieldName, contentTypeName, fieldsGroupName) {
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
+        this.contentTypeName = contentTypeName;
+        this.fieldsGroupName = fieldsGroupName;
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
+        this.contentTypeName = contentTypeName;
+        this.fieldsGroupName = fieldsGroupName;
         this.web = new sp_1.Web(this.webUrl);
         this.list = this.web.lists.getByTitle(this.listName);
+        this.contentType = this.web.contentTypes.getById(this.contentTypeName);
+        this.fields = this.contentType.fields.filter("Group eq '" + fieldsGroupName + "'");
     }
+    SpEntityPortalService.prototype.GetEntityFields = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var fields, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.fields.get()];
+                    case 1:
+                        fields = _a.sent();
+                        return [2 /*return*/, fields];
+                    case 2:
+                        e_1 = _a.sent();
+                        throw e_1;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     SpEntityPortalService.prototype.GetEntityItem = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
-            var item, e_1;
+            var item, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -59,8 +84,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         item = (_a.sent())[0];
                         return [2 /*return*/, item];
                     case 2:
-                        e_1 = _a.sent();
-                        throw e_1;
+                        e_2 = _a.sent();
+                        throw e_2;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -68,7 +93,7 @@ var SpEntityPortalService = /** @class */ (function () {
     };
     SpEntityPortalService.prototype.GetEntityItemId = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
-            var item, e_2;
+            var item, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -78,16 +103,38 @@ var SpEntityPortalService = /** @class */ (function () {
                         item = _a.sent();
                         return [2 /*return*/, item.Id];
                     case 2:
-                        e_2 = _a.sent();
-                        throw e_2;
+                        e_3 = _a.sent();
+                        throw e_3;
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    SpEntityPortalService.prototype.GetEntityEditFormUrl = function (groupId) {
+    SpEntityPortalService.prototype.GetEntityItemFieldValues = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, itemId, DefaultEditFormUrl, e_3;
+            var itemId, itemFieldValues, e_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.GetEntityItemId(groupId)];
+                    case 1:
+                        itemId = _a.sent();
+                        return [4 /*yield*/, this.list.items.getById(itemId).fieldValuesAsText.get()];
+                    case 2:
+                        itemFieldValues = _a.sent();
+                        return [2 /*return*/, itemFieldValues];
+                    case 3:
+                        e_4 = _a.sent();
+                        throw e_4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SpEntityPortalService.prototype.GetEntityEditFormUrl = function (groupId, sourceUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, itemId, DefaultEditFormUrl, e_5;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -98,10 +145,10 @@ var SpEntityPortalService = /** @class */ (function () {
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], DefaultEditFormUrl = _a[1].DefaultEditFormUrl;
-                        return [2 /*return*/, window.location.protocol + "//" + window.location.hostname + DefaultEditFormUrl + "?ID=" + itemId + "&Source=" + encodeURIComponent(this.webUrl)];
+                        return [2 /*return*/, window.location.protocol + "//" + window.location.hostname + DefaultEditFormUrl + "?ID=" + itemId + "&Source=" + encodeURIComponent(sourceUrl)];
                     case 2:
-                        e_3 = _b.sent();
-                        throw e_3;
+                        e_5 = _b.sent();
+                        throw e_5;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -109,7 +156,7 @@ var SpEntityPortalService = /** @class */ (function () {
     };
     SpEntityPortalService.prototype.UpdateEntityItem = function (groupId, properties) {
         return __awaiter(this, void 0, void 0, function () {
-            var itemId, e_4;
+            var itemId, e_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -122,8 +169,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        e_4 = _a.sent();
-                        throw e_4;
+                        e_6 = _a.sent();
+                        throw e_6;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -131,7 +178,7 @@ var SpEntityPortalService = /** @class */ (function () {
     };
     SpEntityPortalService.prototype.NewEntity = function (title, groupId) {
         return __awaiter(this, void 0, void 0, function () {
-            var properties, e_5;
+            var properties, e_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -141,8 +188,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        e_5 = _a.sent();
-                        throw e_5;
+                        e_7 = _a.sent();
+                        throw e_7;
                     case 3: return [2 /*return*/];
                 }
             });

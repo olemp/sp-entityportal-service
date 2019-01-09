@@ -3,12 +3,18 @@ export default class SpEntityPortalService {
     webUrl: string;
     listName: string;
     groupIdFieldName: string;
+    contentTypeName: string;
+    fieldsGroupName: string;
     web: Web;
     list: List;
-    constructor(webUrl: string, listName: string, groupIdFieldName: string);
+    contentType: any;
+    fields: any;
+    constructor(webUrl: string, listName: string, groupIdFieldName: string, contentTypeName: string, fieldsGroupName: string);
+    GetEntityFields(): Promise<any[]>;
     GetEntityItem(groupId: string): Promise<any>;
     GetEntityItemId(groupId: string): Promise<number>;
-    GetEntityEditFormUrl(groupId: string): Promise<string>;
+    GetEntityItemFieldValues(groupId: string): Promise<number>;
+    GetEntityEditFormUrl(groupId: string, sourceUrl: string): Promise<string>;
     UpdateEntityItem(groupId: string, properties: {
         [key: string]: string;
     }): Promise<any>;

@@ -3,17 +3,34 @@ import { Web, List, ItemAddResult } from '@pnp/sp';
 export default class SpEntityPortalService {
     public web: Web;
     public list: List;
+    public contentType: any;
+    public fields: any;
 
     constructor(
         public webUrl: string,
         public listName: string,
         public groupIdFieldName: string,
+        public contentTypeName: string,
+        public fieldsGroupName: string,
     ) {
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
+        this.contentTypeName = contentTypeName;
+        this.fieldsGroupName = fieldsGroupName;
         this.web = new Web(this.webUrl);
         this.list = this.web.lists.getByTitle(this.listName);
+        this.contentType = this.web.contentTypes.getById(this.contentTypeName);
+        this.fields = this.contentType.fields.filter(`Group eq '${fieldsGroupName}'`);
+    }
+
+    public async GetEntityFields(): Promise<any[]> {
+        try {
+            const fields = await this.fields.get();
+            return fields;
+        } catch (e) {
+            throw e;
+        }
     }
 
     public async GetEntityItem(groupId: string): Promise<any> {
@@ -29,6 +46,16 @@ export default class SpEntityPortalService {
         try {
             const item = await this.GetEntityItem(groupId);
             return item.Id;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async GetEntityItemFieldValues(groupId: string): Promise<number> {
+        try {
+            const itemId = await this.GetEntityItemId(groupId);
+            const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();
+            return itemFieldValues;
         } catch (e) {
             throw e;
         }
