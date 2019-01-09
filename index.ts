@@ -10,17 +10,17 @@ export default class SpEntityPortalService {
         public webUrl: string,
         public listName: string,
         public groupIdFieldName: string,
-        public contentTypeName: string,
+        public contentTypeId: string,
         public fieldsGroupName: string,
     ) {
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeName = contentTypeName;
+        this.contentTypeId = contentTypeId;
         this.fieldsGroupName = fieldsGroupName;
         this.web = new Web(this.webUrl);
         this.list = this.web.lists.getByTitle(this.listName);
-        this.contentType = this.web.contentTypes.getById(this.contentTypeName);
+        this.contentType = this.web.contentTypes.getById(this.contentTypeId);
         this.fields = this.contentType.fields.filter(`Group eq '${fieldsGroupName}'`);
     }
 
