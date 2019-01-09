@@ -1,0 +1,19 @@
+{
+  "name": "sp-entityportal-service",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --watch",
+    "postversion": "npm publish"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@pnp/common": "^1.2.7",
+    "@pnp/odata": "^1.2.7",
+    "@pnp/sp": "^1.2.7"
+  }
+}
