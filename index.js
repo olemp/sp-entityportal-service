@@ -37,20 +37,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
 var SpEntityPortalService = /** @class */ (function () {
-    function SpEntityPortalService(webUrl, listName, groupIdFieldName, contentTypeName, fieldsGroupName) {
+    function SpEntityPortalService(webUrl, listName, groupIdFieldName, contentTypeId, fieldsGroupName) {
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeName = contentTypeName;
+        this.contentTypeId = contentTypeId;
         this.fieldsGroupName = fieldsGroupName;
         this.webUrl = webUrl;
         this.listName = listName;
         this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeName = contentTypeName;
+        this.contentTypeId = contentTypeId;
         this.fieldsGroupName = fieldsGroupName;
         this.web = new sp_1.Web(this.webUrl);
         this.list = this.web.lists.getByTitle(this.listName);
-        this.contentType = this.web.contentTypes.getById(this.contentTypeName);
+        this.contentType = this.web.contentTypes.getById(this.contentTypeId);
         this.fields = this.contentType.fields.filter("Group eq '" + fieldsGroupName + "'");
     }
     SpEntityPortalService.prototype.GetEntityFields = function () {

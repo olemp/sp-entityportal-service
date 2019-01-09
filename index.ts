@@ -51,7 +51,7 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityItemFieldValues(groupId: string): Promise<number> {
+    public async GetEntityItemFieldValues(groupId: string): Promise<any> {
         try {
             const itemId = await this.GetEntityItemId(groupId);
             const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();
