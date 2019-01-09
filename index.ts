@@ -10,8 +10,8 @@ export default class SpEntityPortalService {
         public webUrl: string,
         public listName: string,
         public groupIdFieldName: string,
-        public contentTypeId: string,
-        public fieldsGroupName: string,
+        public contentTypeId?: string,
+        public fieldsGroupName?: string,
     ) {
         this.webUrl = webUrl;
         this.listName = listName;
@@ -20,11 +20,16 @@ export default class SpEntityPortalService {
         this.fieldsGroupName = fieldsGroupName;
         this.web = new Web(this.webUrl);
         this.list = this.web.lists.getByTitle(this.listName);
-        this.contentType = this.web.contentTypes.getById(this.contentTypeId);
-        this.fields = this.contentType.fields.filter(`Group eq '${fieldsGroupName}'`);
+        if (this.contentTypeId && this.fieldsGroupName) {
+            this.contentType = this.web.contentTypes.getById(this.contentTypeId);
+            this.fields = this.contentType.fields.filter(`Group eq '${fieldsGroupName}'`);
+        }
     }
 
     public async GetEntityFields(): Promise<any[]> {
+        if (!this.fields) {
+            return null;
+        }
         try {
             const fields = await this.fields.get();
             return fields;

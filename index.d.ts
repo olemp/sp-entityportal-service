@@ -13,7 +13,7 @@ export default class SpEntityPortalService {
     GetEntityFields(): Promise<any[]>;
     GetEntityItem(groupId: string): Promise<any>;
     GetEntityItemId(groupId: string): Promise<number>;
-    GetEntityItemFieldValues(groupId: string): Promise<number>;
+    GetEntityItemFieldValues(groupId: string): Promise<any>;
     GetEntityEditFormUrl(groupId: string, sourceUrl: string): Promise<string>;
     UpdateEntityItem(groupId: string, properties: {
         [key: string]: string;
