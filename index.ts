@@ -1,28 +1,26 @@
 import { Web, List, ItemAddResult } from '@pnp/sp';
 
+export interface ISpEntityPortalServiceParams {
+    webUrl: string,
+    listName: string,
+    groupIdFieldName: string,
+    contentTypeId?: string,
+    fieldsGroupName?: string,
+}
+
 export default class SpEntityPortalService {
     public web: Web;
     public list: List;
     public contentType: any;
     public fields: any;
 
-    constructor(
-        public webUrl: string,
-        public listName: string,
-        public groupIdFieldName: string,
-        public contentTypeId?: string,
-        public fieldsGroupName?: string,
-    ) {
-        this.webUrl = webUrl;
-        this.listName = listName;
-        this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeId = contentTypeId;
-        this.fieldsGroupName = fieldsGroupName;
-        this.web = new Web(this.webUrl);
-        this.list = this.web.lists.getByTitle(this.listName);
-        if (this.contentTypeId && this.fieldsGroupName) {
-            this.contentType = this.web.contentTypes.getById(this.contentTypeId);
-            this.fields = this.contentType.fields.filter(`Group eq '${fieldsGroupName}'`);
+    constructor(public params: ISpEntityPortalServiceParams) {
+        this.params = params;
+        this.web = new Web(this.params.webUrl);
+        this.list = this.web.lists.getByTitle(this.params.listName);
+        if (this.params.contentTypeId && this.params.fieldsGroupName) {
+            this.contentType = this.web.contentTypes.getById(this.params.contentTypeId);
+            this.fields = this.contentType.fields.filter(`Group eq '${this.params.fieldsGroupName}'`);
         }
     }
 
@@ -40,7 +38,7 @@ export default class SpEntityPortalService {
 
     public async GetEntityItem(groupId: string): Promise<any> {
         try {
-            const [item] = await this.list.items.filter(`${this.groupIdFieldName} eq '${groupId}'`).get();
+            const [item] = await this.list.items.filter(`${this.params.groupIdFieldName} eq '${groupId}'`).get();
             return item;
         } catch (e) {
             throw e;
@@ -90,7 +88,7 @@ export default class SpEntityPortalService {
     public async NewEntity(title: string, groupId: string): Promise<ItemAddResult> {
         try {
             let properties = { Title: title };
-            properties[this.groupIdFieldName] = groupId;
+            properties[this.params.groupIdFieldName] = groupId;
             return await this.list.items.add(properties);
         } catch (e) {
             throw e;

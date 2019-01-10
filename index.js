@@ -37,21 +37,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
 var SpEntityPortalService = /** @class */ (function () {
-    function SpEntityPortalService(webUrl, listName, groupIdFieldName, contentTypeId, fieldsGroupName) {
-        this.webUrl = webUrl;
-        this.listName = listName;
-        this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeId = contentTypeId;
-        this.fieldsGroupName = fieldsGroupName;
-        this.webUrl = webUrl;
-        this.listName = listName;
-        this.groupIdFieldName = groupIdFieldName;
-        this.contentTypeId = contentTypeId;
-        this.fieldsGroupName = fieldsGroupName;
-        this.web = new sp_1.Web(this.webUrl);
-        this.list = this.web.lists.getByTitle(this.listName);
-        this.contentType = this.web.contentTypes.getById(this.contentTypeId);
-        this.fields = this.contentType.fields.filter("Group eq '" + fieldsGroupName + "'");
+    function SpEntityPortalService(params) {
+        this.params = params;
+        this.params = params;
+        this.web = new sp_1.Web(this.params.webUrl);
+        this.list = this.web.lists.getByTitle(this.params.listName);
+        if (this.params.contentTypeId && this.params.fieldsGroupName) {
+            this.contentType = this.web.contentTypes.getById(this.params.contentTypeId);
+            this.fields = this.contentType.fields.filter("Group eq '" + this.params.fieldsGroupName + "'");
+        }
     }
     SpEntityPortalService.prototype.GetEntityFields = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -59,15 +53,20 @@ var SpEntityPortalService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.fields.get()];
+                        if (!this.fields) {
+                            return [2 /*return*/, null];
+                        }
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.fields.get()];
+                    case 2:
                         fields = _a.sent();
                         return [2 /*return*/, fields];
-                    case 2:
+                    case 3:
                         e_1 = _a.sent();
                         throw e_1;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -79,7 +78,7 @@ var SpEntityPortalService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.list.items.filter(this.groupIdFieldName + " eq '" + groupId + "'").get()];
+                        return [4 /*yield*/, this.list.items.filter(this.params.groupIdFieldName + " eq '" + groupId + "'").get()];
                     case 1:
                         item = (_a.sent())[0];
                         return [2 /*return*/, item];
@@ -184,7 +183,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         properties = { Title: title };
-                        properties[this.groupIdFieldName] = groupId;
+                        properties[this.params.groupIdFieldName] = groupId;
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:

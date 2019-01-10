@@ -1,15 +1,18 @@
 import { Web, List, ItemAddResult } from '@pnp/sp';
-export default class SpEntityPortalService {
+export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
     groupIdFieldName: string;
-    contentTypeId: string;
-    fieldsGroupName: string;
+    contentTypeId?: string;
+    fieldsGroupName?: string;
+}
+export default class SpEntityPortalService {
+    params: ISpEntityPortalServiceParams;
     web: Web;
     list: List;
     contentType: any;
     fields: any;
-    constructor(webUrl: string, listName: string, groupIdFieldName: string, contentTypeId: string, fieldsGroupName: string);
+    constructor(params: ISpEntityPortalServiceParams);
     GetEntityFields(): Promise<any[]>;
     GetEntityItem(groupId: string): Promise<any>;
     GetEntityItemId(groupId: string): Promise<number>;
