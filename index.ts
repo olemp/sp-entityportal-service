@@ -29,6 +29,9 @@ export default class SpEntityPortalService {
         }
     }
 
+    /**
+     * Get entity item fields
+     */
     public async getEntityFields(): Promise<any[]> {
         if (!this.fields) {
             return null;
@@ -41,6 +44,12 @@ export default class SpEntityPortalService {
         }
     }
 
+    
+    /**
+     * Get entity item
+     * 
+     * @param {string} groupId Group ID
+     */
     public async getEntityItem(groupId: string): Promise<any> {
         try {
             const [item] = await this.list.items.filter(`${this.params.groupIdFieldName} eq '${groupId}'`).get();
@@ -50,6 +59,11 @@ export default class SpEntityPortalService {
         }
     }
 
+    /**
+     * Get entity item ID
+     * 
+     * @param {string} groupId Group ID
+     */
     public async getEntityItemId(groupId: string): Promise<number> {
         try {
             const item = await this.getEntityItem(groupId);
@@ -59,6 +73,11 @@ export default class SpEntityPortalService {
         }
     }
 
+    /**
+     * Get entity item field values
+     * 
+     * @param {string} groupId Group ID
+     */
     public async getEntityItemFieldValues(groupId: string): Promise<any> {
         try {
             const itemId = await this.getEntityItemId(groupId);
@@ -69,6 +88,13 @@ export default class SpEntityPortalService {
         }
     }
 
+     /**
+     * Get entity edit form url
+     * 
+     * @param {string} groupId Group ID
+     * @param {string} sourceUrl Source URL
+     * @param {number} _itemId Item id
+     */
     public async getEntityEditFormUrl(groupId: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
@@ -85,6 +111,12 @@ export default class SpEntityPortalService {
         }
     }
 
+    /**
+     * Update enity item
+     * 
+     * @param {string} groupId Group ID
+     * @param {Object} properties Properties
+     */
     public async updateEntityItem(groupId: string, properties: { [key: string]: string }): Promise<any> {
         try {
             const itemId = await this.getEntityItemId(groupId);
@@ -99,13 +131,14 @@ export default class SpEntityPortalService {
      * 
      * @param {string} title Title
      * @param {string} groupId Group ID
+     * @param {string} sourceUrl Source URL
      */
-    public async newEntity(title: string, groupId: string): Promise<INewEntityResult> {
+    public async newEntity(title: string, groupId: string, sourceUrl: string = null): Promise<INewEntityResult> {
         try {
             let properties = { Title: title };
             properties[this.params.groupIdFieldName] = groupId;
             const { data } = await this.list.items.add(properties);
-            const editFormUrl = await this.getEntityEditFormUrl(groupId, null, data.Id);
+            const editFormUrl = await this.getEntityEditFormUrl(groupId, sourceUrl, data.Id);
             return { item: data, editFormUrl };
         } catch (e) {
             throw e;

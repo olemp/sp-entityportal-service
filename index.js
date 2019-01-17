@@ -47,6 +47,9 @@ var SpEntityPortalService = /** @class */ (function () {
             this.fields = this.contentType.fields.filter("Group eq '" + this.params.fieldsGroupName + "'");
         }
     }
+    /**
+     * Get entity item fields
+     */
     SpEntityPortalService.prototype.getEntityFields = function () {
         return __awaiter(this, void 0, void 0, function () {
             var fields, e_1;
@@ -71,6 +74,11 @@ var SpEntityPortalService = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get entity item
+     *
+     * @param {string} groupId Group ID
+     */
     SpEntityPortalService.prototype.getEntityItem = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_2;
@@ -90,6 +98,11 @@ var SpEntityPortalService = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get entity item ID
+     *
+     * @param {string} groupId Group ID
+     */
     SpEntityPortalService.prototype.getEntityItemId = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_3;
@@ -109,6 +122,11 @@ var SpEntityPortalService = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get entity item field values
+     *
+     * @param {string} groupId Group ID
+     */
     SpEntityPortalService.prototype.getEntityItemFieldValues = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
             var itemId, itemFieldValues, e_4;
@@ -131,6 +149,13 @@ var SpEntityPortalService = /** @class */ (function () {
             });
         });
     };
+    /**
+    * Get entity edit form url
+    *
+    * @param {string} groupId Group ID
+    * @param {string} sourceUrl Source URL
+    * @param {number} _itemId Item id
+    */
     SpEntityPortalService.prototype.getEntityEditFormUrl = function (groupId, sourceUrl, _itemId) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, itemId, DefaultEditFormUrl, editFormUrl, e_5;
@@ -160,6 +185,12 @@ var SpEntityPortalService = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update enity item
+     *
+     * @param {string} groupId Group ID
+     * @param {Object} properties Properties
+     */
     SpEntityPortalService.prototype.updateEntityItem = function (groupId, properties) {
         return __awaiter(this, void 0, void 0, function () {
             var itemId, e_6;
@@ -187,8 +218,10 @@ var SpEntityPortalService = /** @class */ (function () {
      *
      * @param {string} title Title
      * @param {string} groupId Group ID
+     * @param {string} sourceUrl Source URL
      */
-    SpEntityPortalService.prototype.newEntity = function (title, groupId) {
+    SpEntityPortalService.prototype.newEntity = function (title, groupId, sourceUrl) {
+        if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
             var properties, data, editFormUrl, e_7;
             return __generator(this, function (_a) {
@@ -200,7 +233,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1:
                         data = (_a.sent()).data;
-                        return [4 /*yield*/, this.getEntityEditFormUrl(groupId, null, data.Id)];
+                        return [4 /*yield*/, this.getEntityEditFormUrl(groupId, sourceUrl, data.Id)];
                     case 2:
                         editFormUrl = _a.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
