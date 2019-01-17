@@ -8,6 +8,11 @@ export interface ISpEntityPortalServiceParams {
     fieldsGroupName?: string,
 }
 
+export interface INewEntityResult {
+    item: any;
+    editFormUrl: string;
+}
+
 export default class SpEntityPortalService {
     public web: Web;
     public list: List;
@@ -24,7 +29,7 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityFields(): Promise<any[]> {
+    public async getEntityFields(): Promise<any[]> {
         if (!this.fields) {
             return null;
         }
@@ -36,7 +41,7 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityItem(groupId: string): Promise<any> {
+    public async getEntityItem(groupId: string): Promise<any> {
         try {
             const [item] = await this.list.items.filter(`${this.params.groupIdFieldName} eq '${groupId}'`).get();
             return item;
@@ -45,18 +50,18 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityItemId(groupId: string): Promise<number> {
+    public async getEntityItemId(groupId: string): Promise<number> {
         try {
-            const item = await this.GetEntityItem(groupId);
+            const item = await this.getEntityItem(groupId);
             return item.Id;
         } catch (e) {
             throw e;
         }
     }
 
-    public async GetEntityItemFieldValues(groupId: string): Promise<any> {
+    public async getEntityItemFieldValues(groupId: string): Promise<any> {
         try {
-            const itemId = await this.GetEntityItemId(groupId);
+            const itemId = await this.getEntityItemId(groupId);
             const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();
             return itemFieldValues;
         } catch (e) {
@@ -64,32 +69,44 @@ export default class SpEntityPortalService {
         }
     }
 
-    public async GetEntityEditFormUrl(groupId: string, sourceUrl: string): Promise<string> {
+    public async getEntityEditFormUrl(groupId: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
-                this.GetEntityItemId(groupId),
+                _itemId ? async () => _itemId : this.getEntityItemId(groupId),
                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
-            return `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}&Source=${encodeURIComponent(sourceUrl)}`;
+            let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
+            if (sourceUrl) {
+                editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
+            }
+            return editFormUrl;
         } catch (e) {
             throw e;
         }
     }
 
-    public async UpdateEntityItem(groupId: string, properties: { [key: string]: string }): Promise<any> {
+    public async updateEntityItem(groupId: string, properties: { [key: string]: string }): Promise<any> {
         try {
-            const itemId = await this.GetEntityItemId(groupId);
+            const itemId = await this.getEntityItemId(groupId);
             await this.list.items.getById(itemId).update(properties);
         } catch (e) {
             throw e;
         }
     }
 
-    public async NewEntity(title: string, groupId: string): Promise<ItemAddResult> {
+    /**
+     * New entity
+     * 
+     * @param {string} title Title
+     * @param {string} groupId Group ID
+     */
+    public async newEntity(title: string, groupId: string): Promise<INewEntityResult> {
         try {
             let properties = { Title: title };
             properties[this.params.groupIdFieldName] = groupId;
-            return await this.list.items.add(properties);
+            const { data } = await this.list.items.add(properties);
+            const editFormUrl = await this.getEntityEditFormUrl(groupId, null, data.Id);
+            return { item: data, editFormUrl };
         } catch (e) {
             throw e;
         }
