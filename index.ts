@@ -72,7 +72,7 @@ export default class SpEntityPortalService {
     public async getEntityEditFormUrl(groupId: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
-                _itemId ? async () => _itemId : this.getEntityItemId(groupId),
+                _itemId ? (async () => _itemId)() : this.getEntityItemId(groupId),
                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
