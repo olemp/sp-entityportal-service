@@ -1,8 +1,10 @@
 import { Web, List } from '@pnp/sp';
+import { PageContext } from "@microsoft/sp-page-context";
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
     groupIdFieldName: string;
+    siteUrlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
 }
@@ -59,9 +61,8 @@ export default class SpEntityPortalService {
     /**
      * New entity
      *
-     * @param {string} title Title
-     * @param {string} groupId Group ID
+     * @param {PageContext} context Context
      * @param {string} sourceUrl Source URL
      */
-    newEntity(title: string, groupId: string, sourceUrl?: string): Promise<INewEntityResult>;
+    newEntity(context: PageContext, sourceUrl?: string): Promise<INewEntityResult>;
 }

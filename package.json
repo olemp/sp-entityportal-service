@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@microsoft/sp-page-context": "^1.7.1",
     "@pnp/common": "^1.2.7",
     "@pnp/logging": "^1.2.7",
     "@pnp/odata": "^1.2.7",

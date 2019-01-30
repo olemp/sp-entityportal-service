@@ -216,11 +216,10 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * New entity
      *
-     * @param {string} title Title
-     * @param {string} groupId Group ID
+     * @param {PageContext} context Context
      * @param {string} sourceUrl Source URL
      */
-    SpEntityPortalService.prototype.newEntity = function (title, groupId, sourceUrl) {
+    SpEntityPortalService.prototype.newEntity = function (context, sourceUrl) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
             var properties, data, editFormUrl, e_7;
@@ -228,12 +227,15 @@ var SpEntityPortalService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        properties = { Title: title };
-                        properties[this.params.groupIdFieldName] = groupId;
+                        properties = { Title: context.web.title };
+                        properties[this.params.groupIdFieldName] = context.legacyPageContext.groupId;
+                        if (this.params.siteUrlFieldName) {
+                            properties[this.params.siteUrlFieldName] = context.web.absoluteUrl;
+                        }
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1:
                         data = (_a.sent()).data;
-                        return [4 /*yield*/, this.getEntityEditFormUrl(groupId, sourceUrl, data.Id)];
+                        return [4 /*yield*/, this.getEntityEditFormUrl(context.legacyPageContext.groupId, sourceUrl, data.Id)];
                     case 2:
                         editFormUrl = _a.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];

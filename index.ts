@@ -1,11 +1,13 @@
-import { Web, List, ItemAddResult } from '@pnp/sp';
+import { Web, List } from '@pnp/sp';
+import { PageContext } from "@microsoft/sp-page-context";
 
 export interface ISpEntityPortalServiceParams {
-    webUrl: string,
-    listName: string,
-    groupIdFieldName: string,
-    contentTypeId?: string,
-    fieldsGroupName?: string,
+    webUrl: string;
+    listName: string;
+    groupIdFieldName: string;
+    siteUrlFieldName?: string;
+    contentTypeId?: string;
+    fieldsGroupName?: string;
 }
 
 export interface INewEntityResult {
@@ -44,7 +46,7 @@ export default class SpEntityPortalService {
         }
     }
 
-    
+
     /**
      * Get entity item
      * 
@@ -88,13 +90,13 @@ export default class SpEntityPortalService {
         }
     }
 
-     /**
-     * Get entity edit form url
-     * 
-     * @param {string} groupId Group ID
-     * @param {string} sourceUrl Source URL
-     * @param {number} _itemId Item id
-     */
+    /**
+    * Get entity edit form url
+    * 
+    * @param {string} groupId Group ID
+    * @param {string} sourceUrl Source URL
+    * @param {number} _itemId Item id
+    */
     public async getEntityEditFormUrl(groupId: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
@@ -129,16 +131,18 @@ export default class SpEntityPortalService {
     /**
      * New entity
      * 
-     * @param {string} title Title
-     * @param {string} groupId Group ID
+     * @param {PageContext} context Context
      * @param {string} sourceUrl Source URL
      */
-    public async newEntity(title: string, groupId: string, sourceUrl: string = null): Promise<INewEntityResult> {
+    public async newEntity(context: PageContext, sourceUrl: string = null): Promise<INewEntityResult> {
         try {
-            let properties = { Title: title };
-            properties[this.params.groupIdFieldName] = groupId;
+            let properties = { Title: context.web.title };
+            properties[this.params.groupIdFieldName] = context.legacyPageContext.groupId;
+            if (this.params.siteUrlFieldName) {
+                properties[this.params.siteUrlFieldName] = context.web.absoluteUrl;
+            }
             const { data } = await this.list.items.add(properties);
-            const editFormUrl = await this.getEntityEditFormUrl(groupId, sourceUrl, data.Id);
+            const editFormUrl = await this.getEntityEditFormUrl(context.legacyPageContext.groupId, sourceUrl, data.Id);
             return { item: data, editFormUrl };
         } catch (e) {
             throw e;
