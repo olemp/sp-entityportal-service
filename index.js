@@ -216,17 +216,18 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * New entity
      *
-     * @param {PageContext} context Context
+     * @param {any} context Context
      * @param {string} sourceUrl Source URL
+     * @param {INewEntityPermissions} permissions Permissions
      */
-    SpEntityPortalService.prototype.newEntity = function (context, sourceUrl) {
+    SpEntityPortalService.prototype.newEntity = function (context, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var properties, data, editFormUrl, e_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var properties, _a, data, item, editFormUrl, e_7;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _b.trys.push([0, 5, , 6]);
                         properties = { Title: context.web.title };
                         properties[this.params.groupIdFieldName] = context.legacyPageContext.groupId;
                         if (this.params.siteUrlFieldName) {
@@ -234,15 +235,80 @@ var SpEntityPortalService = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1:
-                        data = (_a.sent()).data;
-                        return [4 /*yield*/, this.getEntityEditFormUrl(context.legacyPageContext.groupId, sourceUrl, data.Id)];
+                        _a = _b.sent(), data = _a.data, item = _a.item;
+                        if (!permissions) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.setEntityPermissions(item, permissions)];
                     case 2:
-                        editFormUrl = _a.sent();
+                        _b.sent();
+                        _b.label = 3;
+                    case 3: return [4 /*yield*/, this.getEntityEditFormUrl(context.legacyPageContext.groupId, sourceUrl, data.Id)];
+                    case 4:
+                        editFormUrl = _b.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
-                    case 3:
-                        e_7 = _a.sent();
+                    case 5:
+                        e_7 = _b.sent();
                         throw e_7;
-                    case 4: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Set entity permissions
+     *
+     * @param {Item} item Item/entity
+     * @param {INewEntityPermissions} permissions Permissions
+     */
+    SpEntityPortalService.prototype.setEntityPermissions = function (item, _a) {
+        var fullControlPrincipals = _a.fullControlPrincipals, readPrincipals = _a.readPrincipals, addEveryoneRead = _a.addEveryoneRead;
+        return __awaiter(this, void 0, void 0, function () {
+            var i, principal, i, principal, everyonePrincipal;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, item.breakRoleInheritance(false, true)];
+                    case 1:
+                        _b.sent();
+                        if (!fullControlPrincipals) return [3 /*break*/, 6];
+                        i = 0;
+                        _b.label = 2;
+                    case 2:
+                        if (!(i < fullControlPrincipals.length)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.web.ensureUser(fullControlPrincipals[i])];
+                    case 3:
+                        principal = _b.sent();
+                        return [4 /*yield*/, item.roleAssignments.add(principal.data.Id, 1073741829)];
+                    case 4:
+                        _b.sent();
+                        _b.label = 5;
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 2];
+                    case 6:
+                        if (!readPrincipals) return [3 /*break*/, 11];
+                        i = 0;
+                        _b.label = 7;
+                    case 7:
+                        if (!(i < readPrincipals.length)) return [3 /*break*/, 11];
+                        return [4 /*yield*/, this.web.ensureUser(readPrincipals[i])];
+                    case 8:
+                        principal = _b.sent();
+                        return [4 /*yield*/, item.roleAssignments.add(principal.data.Id, 1073741826)];
+                    case 9:
+                        _b.sent();
+                        _b.label = 10;
+                    case 10:
+                        i++;
+                        return [3 /*break*/, 7];
+                    case 11:
+                        if (!addEveryoneRead) return [3 /*break*/, 14];
+                        return [4 /*yield*/, this.web.siteUsers.filter("substringof('spo-grid-all-user', LoginName)").select('Id').get()];
+                    case 12:
+                        everyonePrincipal = (_b.sent())[0];
+                        return [4 /*yield*/, item.roleAssignments.add(everyonePrincipal.Id, 1073741826)];
+                    case 13:
+                        _b.sent();
+                        _b.label = 14;
+                    case 14: return [2 /*return*/];
                 }
             });
         });

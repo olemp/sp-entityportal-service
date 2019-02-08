@@ -1,5 +1,4 @@
 import { Web, List } from '@pnp/sp';
-import { PageContext } from "@microsoft/sp-page-context";
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
@@ -11,6 +10,11 @@ export interface ISpEntityPortalServiceParams {
 export interface INewEntityResult {
     item: any;
     editFormUrl: string;
+}
+export interface INewEntityPermissions {
+    fullControlPrincipals?: string[];
+    readPrincipals?: string[];
+    addEveryoneRead?: boolean;
 }
 export default class SpEntityPortalService {
     params: ISpEntityPortalServiceParams;
@@ -61,8 +65,16 @@ export default class SpEntityPortalService {
     /**
      * New entity
      *
-     * @param {PageContext} context Context
+     * @param {any} context Context
      * @param {string} sourceUrl Source URL
+     * @param {INewEntityPermissions} permissions Permissions
      */
-    newEntity(context: PageContext, sourceUrl?: string): Promise<INewEntityResult>;
+    newEntity(context: any, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
+    /**
+     * Set entity permissions
+     *
+     * @param {Item} item Item/entity
+     * @param {INewEntityPermissions} permissions Permissions
+     */
+    private setEntityPermissions;
 }
