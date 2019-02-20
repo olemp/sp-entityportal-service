@@ -77,16 +77,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item
      *
-     * @param {string} groupId Group ID
+     * @param {string} siteId Site ID
      */
-    SpEntityPortalService.prototype.getEntityItem = function (groupId) {
+    SpEntityPortalService.prototype.getEntityItem = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.list.items.filter(this.params.groupIdFieldName + " eq '" + groupId + "'").get()];
+                        return [4 /*yield*/, this.list.items.filter(this.params.siteIdFieldName + " eq '" + context.site.id.toString() + "'").get()];
                     case 1:
                         item = (_a.sent())[0];
                         return [2 /*return*/, item];
@@ -101,16 +101,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item ID
      *
-     * @param {string} groupId Group ID
+     * @param {any} context Context
      */
-    SpEntityPortalService.prototype.getEntityItemId = function (groupId) {
+    SpEntityPortalService.prototype.getEntityItemId = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.getEntityItem(groupId)];
+                        return [4 /*yield*/, this.getEntityItem(context)];
                     case 1:
                         item = _a.sent();
                         return [2 /*return*/, item.Id];
@@ -125,16 +125,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item field values
      *
-     * @param {string} groupId Group ID
+     * @param {any} context Context
      */
-    SpEntityPortalService.prototype.getEntityItemFieldValues = function (groupId) {
+    SpEntityPortalService.prototype.getEntityItemFieldValues = function (context) {
         return __awaiter(this, void 0, void 0, function () {
             var itemId, itemFieldValues, e_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getEntityItemId(groupId)];
+                        return [4 /*yield*/, this.getEntityItemId(context)];
                     case 1:
                         itemId = _a.sent();
                         return [4 /*yield*/, this.list.items.getById(itemId).fieldValuesAsText.get()];
@@ -152,11 +152,11 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
     * Get entity edit form url
     *
-    * @param {string} groupId Group ID
+     * @param {any} context Context
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    SpEntityPortalService.prototype.getEntityEditFormUrl = function (groupId, sourceUrl, _itemId) {
+    SpEntityPortalService.prototype.getEntityEditFormUrl = function (context, sourceUrl, _itemId) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, itemId, DefaultEditFormUrl, editFormUrl, e_5;
             var _this = this;
@@ -167,7 +167,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all([
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
-                                }); }); })() : this.getEntityItemId(groupId),
+                                }); }); })() : this.getEntityItemId(context),
                                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
                             ])];
                     case 1:
@@ -188,17 +188,17 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Update enity item
      *
-     * @param {string} groupId Group ID
+     * @param {string} siteId Site ID
      * @param {Object} properties Properties
      */
-    SpEntityPortalService.prototype.updateEntityItem = function (groupId, properties) {
+    SpEntityPortalService.prototype.updateEntityItem = function (context, properties) {
         return __awaiter(this, void 0, void 0, function () {
             var itemId, e_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getEntityItemId(groupId)];
+                        return [4 /*yield*/, this.getEntityItemId(context)];
                     case 1:
                         itemId = _a.sent();
                         return [4 /*yield*/, this.list.items.getById(itemId).update(properties)];
@@ -229,7 +229,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     case 0:
                         _b.trys.push([0, 5, , 6]);
                         properties = { Title: context.web.title };
-                        properties[this.params.groupIdFieldName] = context.legacyPageContext.groupId;
+                        properties[this.params.siteIdFieldName] = context.site.id.toString();
                         if (this.params.siteUrlFieldName) {
                             properties[this.params.siteUrlFieldName] = context.web.absoluteUrl;
                         }
@@ -241,7 +241,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     case 2:
                         _b.sent();
                         _b.label = 3;
-                    case 3: return [4 /*yield*/, this.getEntityEditFormUrl(context.legacyPageContext.groupId, sourceUrl, data.Id)];
+                    case 3: return [4 /*yield*/, this.getEntityEditFormUrl(context.site.id.toString(), sourceUrl, data.Id)];
                     case 4:
                         editFormUrl = _b.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];

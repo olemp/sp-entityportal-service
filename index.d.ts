@@ -2,7 +2,7 @@ import { Web, List } from '@pnp/sp';
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
-    groupIdFieldName: string;
+    siteIdFieldName: string;
     siteUrlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
@@ -30,36 +30,36 @@ export default class SpEntityPortalService {
     /**
      * Get entity item
      *
-     * @param {string} groupId Group ID
+     * @param {string} siteId Site ID
      */
-    getEntityItem(groupId: string): Promise<any>;
+    getEntityItem(context: any): Promise<any>;
     /**
      * Get entity item ID
      *
-     * @param {string} groupId Group ID
+     * @param {any} context Context
      */
-    getEntityItemId(groupId: string): Promise<number>;
+    getEntityItemId(context: any): Promise<number>;
     /**
      * Get entity item field values
      *
-     * @param {string} groupId Group ID
+     * @param {any} context Context
      */
-    getEntityItemFieldValues(groupId: string): Promise<any>;
+    getEntityItemFieldValues(context: any): Promise<any>;
     /**
     * Get entity edit form url
     *
-    * @param {string} groupId Group ID
+     * @param {any} context Context
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    getEntityEditFormUrl(groupId: string, sourceUrl: string, _itemId?: number): Promise<string>;
+    getEntityEditFormUrl(context: any, sourceUrl: string, _itemId?: number): Promise<string>;
     /**
      * Update enity item
      *
-     * @param {string} groupId Group ID
+     * @param {string} siteId Site ID
      * @param {Object} properties Properties
      */
-    updateEntityItem(groupId: string, properties: {
+    updateEntityItem(context: any, properties: {
         [key: string]: string;
     }): Promise<any>;
     /**

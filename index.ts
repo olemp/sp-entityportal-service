@@ -60,8 +60,13 @@ export default class SpEntityPortalService {
      */
     public async getEntityItem(context: any): Promise<any> {
         try {
-            const [item] = await this.list.items.filter(`${this.params.siteIdFieldName} eq '${(context as PageContext).site.id.toString()}'`).get();
-            return item;
+            const siteId = (context as PageContext).site.id.toString();
+            const [item] = await this.list.items.filter(`${this.params.siteIdFieldName} eq '${siteId}'`).get();
+            if (item) {
+                return item;
+            } else {
+                throw `Found no enity item with site ID ${siteId}`;
+            }
         } catch (e) {
             throw e;
         }
