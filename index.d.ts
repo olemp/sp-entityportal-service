@@ -32,34 +32,34 @@ export default class SpEntityPortalService {
      *
      * @param {string} siteId Site ID
      */
-    getEntityItem(context: any): Promise<any>;
+    getEntityItem(siteId: string): Promise<any>;
     /**
      * Get entity item ID
      *
-     * @param {any} context Context
+     * @param {string} siteId Site ID
      */
-    getEntityItemId(context: any): Promise<number>;
+    getEntityItemId(siteId: string): Promise<number>;
     /**
      * Get entity item field values
      *
-     * @param {any} context Context
+     * @param {string} siteId Site ID
      */
-    getEntityItemFieldValues(context: any): Promise<any>;
+    getEntityItemFieldValues(siteId: string): Promise<any>;
     /**
     * Get entity edit form url
     *
-     * @param {any} context Context
+    * @param {string} siteId Site ID
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    getEntityEditFormUrl(context: any, sourceUrl: string, _itemId?: number): Promise<string>;
+    getEntityEditFormUrl(siteId: string, sourceUrl: string, _itemId?: number): Promise<string>;
     /**
      * Update enity item
      *
      * @param {string} siteId Site ID
      * @param {Object} properties Properties
      */
-    updateEntityItem(context: any, properties: {
+    updateEntityItem(siteId: string, properties: {
         [key: string]: string;
     }): Promise<any>;
     /**

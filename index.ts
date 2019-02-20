@@ -58,9 +58,8 @@ export default class SpEntityPortalService {
      * 
      * @param {string} siteId Site ID
      */
-    public async getEntityItem(context: any): Promise<any> {
+    public async getEntityItem(siteId: string): Promise<any> {
         try {
-            const siteId = (context as PageContext).site.id.toString();
             const [item] = await this.list.items.filter(`${this.params.siteIdFieldName} eq '${siteId}'`).get();
             if (item) {
                 return item;
@@ -75,11 +74,11 @@ export default class SpEntityPortalService {
     /**
      * Get entity item ID
      * 
-     * @param {any} context Context
+     * @param {string} siteId Site ID
      */
-    public async getEntityItemId(context: any): Promise<number> {
+    public async getEntityItemId(siteId: string): Promise<number> {
         try {
-            const item = await this.getEntityItem(context);
+            const item = await this.getEntityItem(siteId);
             return item.Id;
         } catch (e) {
             throw e;
@@ -89,11 +88,11 @@ export default class SpEntityPortalService {
     /**
      * Get entity item field values
      * 
-     * @param {any} context Context
+     * @param {string} siteId Site ID
      */
-    public async getEntityItemFieldValues(context: any): Promise<any> {
+    public async getEntityItemFieldValues(siteId: string): Promise<any> {
         try {
-            const itemId = await this.getEntityItemId(context);
+            const itemId = await this.getEntityItemId(siteId);
             const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();
             return itemFieldValues;
         } catch (e) {
@@ -104,14 +103,14 @@ export default class SpEntityPortalService {
     /**
     * Get entity edit form url
     * 
-     * @param {any} context Context
+    * @param {string} siteId Site ID
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    public async getEntityEditFormUrl(context: any, sourceUrl: string, _itemId?: number): Promise<string> {
+    public async getEntityEditFormUrl(siteId: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
-                _itemId ? (async () => _itemId)() : this.getEntityItemId(context),
+                _itemId ? (async () => _itemId)() : this.getEntityItemId(siteId),
                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
@@ -130,9 +129,9 @@ export default class SpEntityPortalService {
      * @param {string} siteId Site ID
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(context: any, properties: { [key: string]: string }): Promise<any> {
+    public async updateEntityItem(siteId: string, properties: { [key: string]: string }): Promise<any> {
         try {
-            const itemId = await this.getEntityItemId(context);
+            const itemId = await this.getEntityItemId(siteId);
             await this.list.items.getById(itemId).update(properties);
         } catch (e) {
             throw e;
