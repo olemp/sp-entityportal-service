@@ -56,10 +56,10 @@ export default class SpEntityPortalService {
     /**
      * Update enity item
      *
-     * @param {string} siteId Site ID
+     * @param {any} context Context
      * @param {Object} properties Properties
      */
-    updateEntityItem(siteId: string, properties: {
+    updateEntityItem(context: any, properties: {
         [key: string]: string;
     }): Promise<any>;
     /**

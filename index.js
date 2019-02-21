@@ -194,16 +194,17 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Update enity item
      *
-     * @param {string} siteId Site ID
+     * @param {any} context Context
      * @param {Object} properties Properties
      */
-    SpEntityPortalService.prototype.updateEntityItem = function (siteId, properties) {
+    SpEntityPortalService.prototype.updateEntityItem = function (context, properties) {
         return __awaiter(this, void 0, void 0, function () {
-            var itemId, e_6;
+            var siteId, itemId, e_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        siteId = context.site.id.toString();
                         return [4 /*yield*/, this.getEntityItemId(siteId)];
                     case 1:
                         itemId = _a.sent();
@@ -229,13 +230,14 @@ var SpEntityPortalService = /** @class */ (function () {
     SpEntityPortalService.prototype.newEntity = function (context, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var properties, _a, data, item, editFormUrl, e_7;
+            var properties, siteId, _a, data, item, editFormUrl, e_7;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 5, , 6]);
                         properties = { Title: context.web.title };
-                        properties[this.params.siteIdFieldName] = context.site.id.toString();
+                        siteId = context.site.id.toString();
+                        properties[this.params.siteIdFieldName] = siteId;
                         if (this.params.siteUrlFieldName) {
                             properties[this.params.siteUrlFieldName] = context.web.absoluteUrl;
                         }

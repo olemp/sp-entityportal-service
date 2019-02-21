@@ -1,4 +1,4 @@
-import { Web, List, Item } from '@pnp/sp';
+import { Web, List, Item, Fields } from '@pnp/sp';
 import { PageContext } from "@microsoft/sp-page-context";
 
 export interface ISpEntityPortalServiceParams {
@@ -21,11 +21,17 @@ export interface INewEntityPermissions {
     addEveryoneRead?: boolean;
 }
 
+export interface IEntityField {
+    Title: string;
+    InternalName: string;
+    TypeAsString: string;
+}
+
 export default class SpEntityPortalService {
     public web: Web;
     public list: List;
     public contentType: any;
-    public fields: any;
+    public fields: Fields;
 
     constructor(public params: ISpEntityPortalServiceParams) {
         this.params = params;
@@ -40,13 +46,12 @@ export default class SpEntityPortalService {
     /**
      * Get entity item fields
      */
-    public async getEntityFields(): Promise<any[]> {
+    public async getEntityFields(): Promise<IEntityField[]> {
         if (!this.fields) {
             return null;
         }
         try {
-            const fields = await this.fields.get();
-            return fields;
+            return this.fields.select('InternalName', 'Title', 'TypeAsString').get<IEntityField[]>();
         } catch (e) {
             throw e;
         }
@@ -129,7 +134,7 @@ export default class SpEntityPortalService {
      * @param {any} context Context
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(context: any, properties: { [key: string]: string }): Promise<any> {
+    public async updateEntityItem(context: any, properties: { [key: string]: string }): Promise<void> {
         try {
             const siteId = (context as PageContext).site.id.toString();
             const itemId = await this.getEntityItemId(siteId);
