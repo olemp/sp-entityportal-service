@@ -126,11 +126,12 @@ export default class SpEntityPortalService {
     /**
      * Update enity item
      * 
-     * @param {string} siteId Site ID
+     * @param {any} context Context
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(siteId: string, properties: { [key: string]: string }): Promise<any> {
+    public async updateEntityItem(context: any, properties: { [key: string]: string }): Promise<any> {
         try {
+            const siteId = (context as PageContext).site.id.toString();
             const itemId = await this.getEntityItemId(siteId);
             await this.list.items.getById(itemId).update(properties);
         } catch (e) {
@@ -148,7 +149,8 @@ export default class SpEntityPortalService {
     public async newEntity(context: any, sourceUrl: string = null, permissions?: INewEntityPermissions): Promise<INewEntityResult> {
         try {
             let properties = { Title: context.web.title };
-            properties[this.params.siteIdFieldName] = (context as PageContext).site.id.toString();
+            const siteId = (context as PageContext).site.id.toString();
+            properties[this.params.siteIdFieldName] = siteId;
             if (this.params.siteUrlFieldName) {
                 properties[this.params.siteUrlFieldName] = (context as PageContext).web.absoluteUrl;
             }
