@@ -57,7 +57,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     return [2 /*return*/, null];
                 }
                 try {
-                    return [2 /*return*/, this.fields.select('InternalName', 'Title', 'TypeAsString').get()];
+                    return [2 /*return*/, this.fields.select('InternalName', 'Title', 'TypeAsString', 'SchemaXml').get()];
                 }
                 catch (e) {
                     throw e;

@@ -20,6 +20,7 @@ export interface IEntityField {
     Title: string;
     InternalName: string;
     TypeAsString: string;
+    SchemaXml: string;
 }
 export default class SpEntityPortalService {
     params: ISpEntityPortalServiceParams;
@@ -37,7 +38,9 @@ export default class SpEntityPortalService {
      *
      * @param {string} siteId Site ID
      */
-    getEntityItem(siteId: string): Promise<any>;
+    getEntityItem(siteId: string): Promise<{
+        [key: string]: any;
+    }>;
     /**
      * Get entity item ID
      *
@@ -49,7 +52,9 @@ export default class SpEntityPortalService {
      *
      * @param {string} siteId Site ID
      */
-    getEntityItemFieldValues(siteId: string): Promise<any>;
+    getEntityItemFieldValues(siteId: string): Promise<{
+        [key: string]: any;
+    }>;
     /**
     * Get entity edit form url
     *

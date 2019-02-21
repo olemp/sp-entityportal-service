@@ -25,6 +25,7 @@ export interface IEntityField {
     Title: string;
     InternalName: string;
     TypeAsString: string;
+    SchemaXml: string;
 }
 
 export default class SpEntityPortalService {
@@ -51,7 +52,7 @@ export default class SpEntityPortalService {
             return null;
         }
         try {
-            return this.fields.select('InternalName', 'Title', 'TypeAsString').get<IEntityField[]>();
+            return this.fields.select('InternalName', 'Title', 'TypeAsString', 'SchemaXml').get<IEntityField[]>();
         } catch (e) {
             throw e;
         }
