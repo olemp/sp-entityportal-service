@@ -63,7 +63,7 @@ export default class SpEntityPortalService {
      * 
      * @param {string} siteId Site ID
      */
-    public async getEntityItem(siteId: string): Promise<any> {
+    public async getEntityItem(siteId: string): Promise<{ [key: string]: any }> {
         try {
             const [item] = await this.list.items.filter(`${this.params.siteIdFieldName} eq '${siteId}'`).get();
             if (item) {
@@ -95,7 +95,7 @@ export default class SpEntityPortalService {
      * 
      * @param {string} siteId Site ID
      */
-    public async getEntityItemFieldValues(siteId: string): Promise<any> {
+    public async getEntityItemFieldValues(siteId: string): Promise<{ [key: string]: any }> {
         try {
             const itemId = await this.getEntityItemId(siteId);
             const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();

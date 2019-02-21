@@ -52,25 +52,17 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityFields = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var fields, e_1;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.fields) {
-                            return [2 /*return*/, null];
-                        }
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.fields.get()];
-                    case 2:
-                        fields = _a.sent();
-                        return [2 /*return*/, fields];
-                    case 3:
-                        e_1 = _a.sent();
-                        throw e_1;
-                    case 4: return [2 /*return*/];
+                if (!this.fields) {
+                    return [2 /*return*/, null];
                 }
+                try {
+                    return [2 /*return*/, this.fields.select('InternalName', 'Title', 'TypeAsString').get()];
+                }
+                catch (e) {
+                    throw e;
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -81,7 +73,7 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityItem = function (siteId) {
         return __awaiter(this, void 0, void 0, function () {
-            var item, e_2;
+            var item, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -97,8 +89,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 3];
                     case 2:
-                        e_2 = _a.sent();
-                        throw e_2;
+                        e_1 = _a.sent();
+                        throw e_1;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -111,7 +103,7 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityItemId = function (siteId) {
         return __awaiter(this, void 0, void 0, function () {
-            var item, e_3;
+            var item, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -121,8 +113,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         item = _a.sent();
                         return [2 /*return*/, item.Id];
                     case 2:
-                        e_3 = _a.sent();
-                        throw e_3;
+                        e_2 = _a.sent();
+                        throw e_2;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -135,7 +127,7 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityItemFieldValues = function (siteId) {
         return __awaiter(this, void 0, void 0, function () {
-            var itemId, itemFieldValues, e_4;
+            var itemId, itemFieldValues, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -148,8 +140,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         itemFieldValues = _a.sent();
                         return [2 /*return*/, itemFieldValues];
                     case 3:
-                        e_4 = _a.sent();
-                        throw e_4;
+                        e_3 = _a.sent();
+                        throw e_3;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -164,7 +156,7 @@ var SpEntityPortalService = /** @class */ (function () {
     */
     SpEntityPortalService.prototype.getEntityEditFormUrl = function (siteId, sourceUrl, _itemId) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, itemId, DefaultEditFormUrl, editFormUrl, e_5;
+            var _a, itemId, DefaultEditFormUrl, editFormUrl, e_4;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -184,8 +176,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         }
                         return [2 /*return*/, editFormUrl];
                     case 2:
-                        e_5 = _b.sent();
-                        throw e_5;
+                        e_4 = _b.sent();
+                        throw e_4;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -199,7 +191,7 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.updateEntityItem = function (context, properties) {
         return __awaiter(this, void 0, void 0, function () {
-            var siteId, itemId, e_6;
+            var siteId, itemId, e_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -213,8 +205,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        e_6 = _a.sent();
-                        throw e_6;
+                        e_5 = _a.sent();
+                        throw e_5;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -230,7 +222,7 @@ var SpEntityPortalService = /** @class */ (function () {
     SpEntityPortalService.prototype.newEntity = function (context, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var properties, siteId, _a, data, item, editFormUrl, e_7;
+            var properties, siteId, _a, data, item, editFormUrl, e_6;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -254,8 +246,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         editFormUrl = _b.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
                     case 5:
-                        e_7 = _b.sent();
-                        throw e_7;
+                        e_6 = _b.sent();
+                        throw e_6;
                     case 6: return [2 /*return*/];
                 }
             });

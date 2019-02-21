@@ -1,4 +1,4 @@
-import { Web, List } from '@pnp/sp';
+import { Web, List, Fields } from '@pnp/sp';
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
@@ -16,17 +16,22 @@ export interface INewEntityPermissions {
     readPrincipals?: string[];
     addEveryoneRead?: boolean;
 }
+export interface IEntityField {
+    Title: string;
+    InternalName: string;
+    TypeAsString: string;
+}
 export default class SpEntityPortalService {
     params: ISpEntityPortalServiceParams;
     web: Web;
     list: List;
     contentType: any;
-    fields: any;
+    fields: Fields;
     constructor(params: ISpEntityPortalServiceParams);
     /**
      * Get entity item fields
      */
-    getEntityFields(): Promise<any[]>;
+    getEntityFields(): Promise<IEntityField[]>;
     /**
      * Get entity item
      *
@@ -61,7 +66,7 @@ export default class SpEntityPortalService {
      */
     updateEntityItem(context: any, properties: {
         [key: string]: string;
-    }): Promise<any>;
+    }): Promise<void>;
     /**
      * New entity
      *
