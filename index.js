@@ -78,6 +78,9 @@ var SpEntityPortalService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        if (siteId.length === 38) {
+                            siteId = siteId.substring(1, 37);
+                        }
                         return [4 /*yield*/, this.list.items.filter(this.params.siteIdFieldName + " eq '" + siteId + "'").get()];
                     case 1:
                         item = (_a.sent())[0];

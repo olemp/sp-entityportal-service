@@ -66,6 +66,9 @@ export default class SpEntityPortalService {
      */
     public async getEntityItem(siteId: string): Promise<{ [key: string]: any }> {
         try {
+            if (siteId.length === 38) {
+                siteId = siteId.substring(1, 37);
+            }
             const [item] = await this.list.items.filter(`${this.params.siteIdFieldName} eq '${siteId}'`).get();
             if (item) {
                 return item;
