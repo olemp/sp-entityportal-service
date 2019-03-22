@@ -2,8 +2,8 @@ import { Web, List, Fields } from '@pnp/sp';
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
-    siteIdFieldName: string;
-    siteUrlFieldName?: string;
+    identityFieldName: string;
+    urlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
 }
@@ -36,33 +36,33 @@ export default class SpEntityPortalService {
     /**
      * Get entity item
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    getEntityItem(siteId: string): Promise<{
+    getEntityItem(identity: string): Promise<{
         [key: string]: any;
     }>;
     /**
      * Get entity item ID
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    getEntityItemId(siteId: string): Promise<number>;
+    getEntityItemId(identity: string): Promise<number>;
     /**
      * Get entity item field values
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    getEntityItemFieldValues(siteId: string): Promise<{
+    getEntityItemFieldValues(identity: string): Promise<{
         [key: string]: any;
     }>;
     /**
     * Get entity edit form url
     *
-    * @param {string} siteId Site ID
+    * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    getEntityEditFormUrl(siteId: string, sourceUrl: string, _itemId?: number): Promise<string>;
+    getEntityEditFormUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string>;
     /**
      * Update enity item
      *
@@ -75,11 +75,12 @@ export default class SpEntityPortalService {
     /**
      * New entity
      *
-     * @param {any} context Context
+     * @param {string} identity Identity
+     * @param {string} url Url
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    newEntity(context: any, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
+    newEntity(identity: string, url: string, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
     /**
      * Set entity permissions
      *

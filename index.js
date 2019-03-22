@@ -69,26 +69,26 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    SpEntityPortalService.prototype.getEntityItem = function (siteId) {
+    SpEntityPortalService.prototype.getEntityItem = function (identity) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        if (siteId.length === 38) {
-                            siteId = siteId.substring(1, 37);
+                        if (identity.length === 38) {
+                            identity = identity.substring(1, 37);
                         }
-                        return [4 /*yield*/, this.list.items.filter(this.params.siteIdFieldName + " eq '" + siteId + "'").get()];
+                        return [4 /*yield*/, this.list.items.filter(this.params.identityFieldName + " eq '" + identity + "'").get()];
                     case 1:
                         item = (_a.sent())[0];
                         if (item) {
                             return [2 /*return*/, item];
                         }
                         else {
-                            throw "Found no enity item with site ID " + siteId;
+                            throw "Found no enity item with site ID " + identity;
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -102,16 +102,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item ID
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    SpEntityPortalService.prototype.getEntityItemId = function (siteId) {
+    SpEntityPortalService.prototype.getEntityItemId = function (identity) {
         return __awaiter(this, void 0, void 0, function () {
             var item, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.getEntityItem(siteId)];
+                        return [4 /*yield*/, this.getEntityItem(identity)];
                     case 1:
                         item = _a.sent();
                         return [2 /*return*/, item.Id];
@@ -126,16 +126,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Get entity item field values
      *
-     * @param {string} siteId Site ID
+     * @param {string} identity Identity
      */
-    SpEntityPortalService.prototype.getEntityItemFieldValues = function (siteId) {
+    SpEntityPortalService.prototype.getEntityItemFieldValues = function (identity) {
         return __awaiter(this, void 0, void 0, function () {
             var itemId, itemFieldValues, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getEntityItemId(siteId)];
+                        return [4 /*yield*/, this.getEntityItemId(identity)];
                     case 1:
                         itemId = _a.sent();
                         return [4 /*yield*/, this.list.items.getById(itemId).fieldValuesAsText.get()];
@@ -153,11 +153,11 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
     * Get entity edit form url
     *
-    * @param {string} siteId Site ID
+    * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
     * @param {number} _itemId Item id
     */
-    SpEntityPortalService.prototype.getEntityEditFormUrl = function (siteId, sourceUrl, _itemId) {
+    SpEntityPortalService.prototype.getEntityEditFormUrl = function (identity, sourceUrl, _itemId) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, itemId, DefaultEditFormUrl, editFormUrl, e_4;
             var _this = this;
@@ -168,7 +168,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all([
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
-                                }); }); })() : this.getEntityItemId(siteId),
+                                }); }); })() : this.getEntityItemId(identity),
                                 this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
                             ])];
                     case 1:
@@ -194,13 +194,13 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.updateEntityItem = function (context, properties) {
         return __awaiter(this, void 0, void 0, function () {
-            var siteId, itemId, e_5;
+            var identity, itemId, e_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        siteId = context.site.id.toString();
-                        return [4 /*yield*/, this.getEntityItemId(siteId)];
+                        identity = context.site.id.toString();
+                        return [4 /*yield*/, this.getEntityItemId(identity)];
                     case 1:
                         itemId = _a.sent();
                         return [4 /*yield*/, this.list.items.getById(itemId).update(properties)];
@@ -218,23 +218,23 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * New entity
      *
-     * @param {any} context Context
+     * @param {string} identity Identity
+     * @param {string} url Url
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    SpEntityPortalService.prototype.newEntity = function (context, sourceUrl, permissions) {
+    SpEntityPortalService.prototype.newEntity = function (identity, url, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var properties, siteId, _a, data, item, editFormUrl, e_6;
+            var properties, _a, data, item, editFormUrl, e_6;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 5, , 6]);
-                        properties = { Title: context.web.title };
-                        siteId = context.site.id.toString();
-                        properties[this.params.siteIdFieldName] = siteId;
-                        if (this.params.siteUrlFieldName) {
-                            properties[this.params.siteUrlFieldName] = context.web.absoluteUrl;
+                        properties = { Title: '' };
+                        properties[this.params.identityFieldName] = identity;
+                        if (this.params.urlFieldName) {
+                            properties[this.params.urlFieldName] = url;
                         }
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1:
@@ -244,7 +244,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     case 2:
                         _b.sent();
                         _b.label = 3;
-                    case 3: return [4 /*yield*/, this.getEntityEditFormUrl(context.site.id.toString(), sourceUrl, data.Id)];
+                    case 3: return [4 /*yield*/, this.getEntityEditFormUrl(identity, sourceUrl, data.Id)];
                     case 4:
                         editFormUrl = _b.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
