@@ -230,10 +230,11 @@ var SpEntityPortalService = /** @class */ (function () {
      *
      * @param {string} identity Identity
      * @param {string} url Url
+     * @param {Object} additionalProperties Additional properties
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    SpEntityPortalService.prototype.newEntity = function (identity, url, sourceUrl, permissions) {
+    SpEntityPortalService.prototype.newEntity = function (identity, url, additionalProperties, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
             var _a, properties, _b, data, item, editFormUrl, e_6;
@@ -241,7 +242,7 @@ var SpEntityPortalService = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 5, , 6]);
-                        properties = __assign((_a = { Title: '' }, _a[this.params.identityFieldName] = identity, _a), this.params.additionalProperties);
+                        properties = __assign((_a = { Title: '' }, _a[this.params.identityFieldName] = identity, _a), additionalProperties);
                         if (this.params.urlFieldName) {
                             properties[this.params.urlFieldName] = url;
                         }

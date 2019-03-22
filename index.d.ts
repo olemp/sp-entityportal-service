@@ -3,9 +3,6 @@ export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
     identityFieldName: string;
-    additionalProperties?: {
-        [key: string]: any;
-    };
     urlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
@@ -80,10 +77,13 @@ export default class SpEntityPortalService {
      *
      * @param {string} identity Identity
      * @param {string} url Url
+     * @param {Object} additionalProperties Additional properties
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    newEntity(identity: string, url: string, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
+    newEntity(identity: string, url: string, additionalProperties?: {
+        [key: string]: any;
+    }, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
     /**
      * Set entity permissions
      *
