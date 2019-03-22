@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -88,7 +99,7 @@ var SpEntityPortalService = /** @class */ (function () {
                             return [2 /*return*/, item];
                         }
                         else {
-                            throw "Found no enity item with site ID " + identity;
+                            throw "Found no enity item with identity " + identity;
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -189,17 +200,16 @@ var SpEntityPortalService = /** @class */ (function () {
     /**
      * Update enity item
      *
-     * @param {any} context Context
+     * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    SpEntityPortalService.prototype.updateEntityItem = function (context, properties) {
+    SpEntityPortalService.prototype.updateEntityItem = function (identity, properties) {
         return __awaiter(this, void 0, void 0, function () {
-            var identity, itemId, e_5;
+            var itemId, e_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        identity = context.site.id.toString();
                         return [4 /*yield*/, this.getEntityItemId(identity)];
                     case 1:
                         itemId = _a.sent();
@@ -226,30 +236,29 @@ var SpEntityPortalService = /** @class */ (function () {
     SpEntityPortalService.prototype.newEntity = function (identity, url, sourceUrl, permissions) {
         if (sourceUrl === void 0) { sourceUrl = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var properties, _a, data, item, editFormUrl, e_6;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var _a, properties, _b, data, item, editFormUrl, e_6;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _b.trys.push([0, 5, , 6]);
-                        properties = { Title: '' };
-                        properties[this.params.identityFieldName] = identity;
+                        _c.trys.push([0, 5, , 6]);
+                        properties = __assign((_a = { Title: '' }, _a[this.params.identityFieldName] = identity, _a), this.params.additionalProperties);
                         if (this.params.urlFieldName) {
                             properties[this.params.urlFieldName] = url;
                         }
                         return [4 /*yield*/, this.list.items.add(properties)];
                     case 1:
-                        _a = _b.sent(), data = _a.data, item = _a.item;
+                        _b = _c.sent(), data = _b.data, item = _b.item;
                         if (!permissions) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.setEntityPermissions(item, permissions)];
                     case 2:
-                        _b.sent();
-                        _b.label = 3;
+                        _c.sent();
+                        _c.label = 3;
                     case 3: return [4 /*yield*/, this.getEntityEditFormUrl(identity, sourceUrl, data.Id)];
                     case 4:
-                        editFormUrl = _b.sent();
+                        editFormUrl = _c.sent();
                         return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
                     case 5:
-                        e_6 = _b.sent();
+                        e_6 = _c.sent();
                         throw e_6;
                     case 6: return [2 /*return*/];
                 }

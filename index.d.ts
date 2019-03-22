@@ -3,6 +3,9 @@ export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
     identityFieldName: string;
+    additionalProperties?: {
+        [key: string]: any;
+    };
     urlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
@@ -66,10 +69,10 @@ export default class SpEntityPortalService {
     /**
      * Update enity item
      *
-     * @param {any} context Context
+     * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    updateEntityItem(context: any, properties: {
+    updateEntityItem(identity: string, properties: {
         [key: string]: string;
     }): Promise<void>;
     /**

@@ -1,10 +1,10 @@
 import { Web, List, Item, Fields } from '@pnp/sp';
-import { PageContext } from "@microsoft/sp-page-context";
 
 export interface ISpEntityPortalServiceParams {
     webUrl: string;
     listName: string;
     identityFieldName: string;
+    additionalProperties?: { [key: string]: any };
     urlFieldName?: string;
     contentTypeId?: string;
     fieldsGroupName?: string;
@@ -73,7 +73,7 @@ export default class SpEntityPortalService {
             if (item) {
                 return item;
             } else {
-                throw `Found no enity item with site ID ${identity}`;
+                throw `Found no enity item with identity ${identity}`;
             }
         } catch (e) {
             throw e;
@@ -135,12 +135,11 @@ export default class SpEntityPortalService {
     /**
      * Update enity item
      * 
-     * @param {any} context Context
+     * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(context: any, properties: { [key: string]: string }): Promise<void> {
+    public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<void> {
         try {
-            const identity = (context as PageContext).site.id.toString();
             const itemId = await this.getEntityItemId(identity);
             await this.list.items.getById(itemId).update(properties);
         } catch (e) {
@@ -158,8 +157,7 @@ export default class SpEntityPortalService {
      */
     public async newEntity(identity: string, url: string, sourceUrl: string = null, permissions?: INewEntityPermissions): Promise<INewEntityResult> {
         try {
-            let properties = { Title: '' };
-            properties[this.params.identityFieldName] = identity;
+            let properties = { Title: '', [this.params.identityFieldName]: identity, ...this.params.additionalProperties };
             if (this.params.urlFieldName) {
                 properties[this.params.urlFieldName] = url;
             }
