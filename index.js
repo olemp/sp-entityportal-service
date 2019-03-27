@@ -50,7 +50,6 @@ var sp_1 = require("@pnp/sp");
 var SpEntityPortalService = /** @class */ (function () {
     function SpEntityPortalService(params) {
         this.params = params;
-        this.params = params;
         this.web = new sp_1.Web(this.params.webUrl);
         this.list = this.web.lists.getByTitle(this.params.listName);
         if (this.params.contentTypeId && this.params.fieldsGroupName) {

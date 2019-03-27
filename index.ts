@@ -34,7 +34,6 @@ export default class SpEntityPortalService {
     public fields: Fields;
 
     constructor(public params: ISpEntityPortalServiceParams) {
-        this.params = params;
         this.web = new Web(this.params.webUrl);
         this.list = this.web.lists.getByTitle(this.params.listName);
         if (this.params.contentTypeId && this.params.fieldsGroupName) {
