@@ -179,7 +179,7 @@ var SpEntityPortalService = /** @class */ (function () {
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
                                 }); }); })() : this.getEntityItemId(identity),
-                                this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], DefaultEditFormUrl = _a[1].DefaultEditFormUrl;
@@ -215,7 +215,7 @@ var SpEntityPortalService = /** @class */ (function () {
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
                                 }); }); })() : this.getEntityItemId(identity),
-                                this.list.select('ID').get(),
+                                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], ID = _a[1].ID;
