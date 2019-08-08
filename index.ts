@@ -5,12 +5,12 @@ import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 
 export default class SpEntityPortalService {
-    public web: Web;
-    public list: List;
-    public contentType: any;
-    public fields: Fields;
+    private web: Web;
+    private list: List;
+    private contentType: any;
+    private fields: Fields;
 
-    constructor(public params: ISpEntityPortalServiceParams) {
+    constructor(private params: ISpEntityPortalServiceParams) {
         this.web = new Web(this.params.webUrl);
         this.list = this.web.lists.getByTitle(this.params.listName);
         if (this.params.contentTypeId && this.params.fieldsGroupName) {
@@ -95,7 +95,7 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                this.web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
             if (sourceUrl) {
@@ -116,11 +116,11 @@ export default class SpEntityPortalService {
     */
     public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string> {
         try {
-            const [itemId, { ID }] = await Promise.all([
+            const [itemId, { Id }] = await Promise.all([
                 _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                this.web.lists.getByTitle(this.params.listName).select('Id').get(),
             ]);
-            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${ID}&ID=${itemId}`;
+            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
                 editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
             }
