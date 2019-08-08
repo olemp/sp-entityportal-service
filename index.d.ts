@@ -1,14 +1,13 @@
-import { Web, List, Fields } from '@pnp/sp';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 export default class SpEntityPortalService {
-    params: ISpEntityPortalServiceParams;
-    web: Web;
-    list: List;
-    contentType: any;
-    fields: Fields;
+    private params;
+    private web;
+    private list;
+    private contentType;
+    private fields;
     constructor(params: ISpEntityPortalServiceParams);
     /**
      * Get entity item fields

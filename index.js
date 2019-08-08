@@ -179,7 +179,7 @@ var SpEntityPortalService = /** @class */ (function () {
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
                                 }); }); })() : this.getEntityItemId(identity),
-                                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                                this.web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], DefaultEditFormUrl = _a[1].DefaultEditFormUrl;
@@ -205,7 +205,7 @@ var SpEntityPortalService = /** @class */ (function () {
     */
     SpEntityPortalService.prototype.getEntityVersionHistoryUrl = function (identity, sourceUrl, _itemId) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, itemId, ID, editFormUrl, e_5;
+            var _a, itemId, Id, editFormUrl, e_5;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -215,11 +215,11 @@ var SpEntityPortalService = /** @class */ (function () {
                                 _itemId ? (function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                                     return [2 /*return*/, _itemId];
                                 }); }); })() : this.getEntityItemId(identity),
-                                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                                this.web.lists.getByTitle(this.params.listName).select('Id').get(),
                             ])];
                     case 1:
-                        _a = _b.sent(), itemId = _a[0], ID = _a[1].ID;
-                        editFormUrl = this.params.webUrl + "/_layouts/15/versions.aspx?list=" + ID + "&ID=" + itemId;
+                        _a = _b.sent(), itemId = _a[0], Id = _a[1].Id;
+                        editFormUrl = this.params.webUrl + "/_layouts/15/versions.aspx?list=" + Id + "&ID=" + itemId;
                         if (sourceUrl) {
                             editFormUrl += "&Source=" + encodeURIComponent(sourceUrl);
                         }
