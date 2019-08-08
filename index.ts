@@ -197,3 +197,5 @@ export default class SpEntityPortalService {
         }
     }
 }
+
+export { ISpEntityPortalServiceParams };

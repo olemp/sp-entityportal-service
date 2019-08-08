@@ -1,27 +1,8 @@
 import { Web, List, Fields } from '@pnp/sp';
-export interface ISpEntityPortalServiceParams {
-    webUrl: string;
-    listName: string;
-    identityFieldName: string;
-    urlFieldName?: string;
-    contentTypeId?: string;
-    fieldsGroupName?: string;
-}
-export interface INewEntityResult {
-    item: any;
-    editFormUrl: string;
-}
-export interface INewEntityPermissions {
-    fullControlPrincipals?: string[];
-    readPrincipals?: string[];
-    addEveryoneRead?: boolean;
-}
-export interface IEntityField {
-    Title: string;
-    InternalName: string;
-    TypeAsString: string;
-    SchemaXml: string;
-}
+import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
+import { INewEntityResult } from './INewEntityResult';
+import { INewEntityPermissions } from './INewEntityPermissions';
+import { IEntityField } from './IEntityField';
 export default class SpEntityPortalService {
     params: ISpEntityPortalServiceParams;
     web: Web;
@@ -63,6 +44,14 @@ export default class SpEntityPortalService {
     * @param {number} _itemId Item id
     */
     getEntityEditFormUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string>;
+    /**
+    * Get entity version history url
+    *
+    * @param {string} identity Identity
+    * @param {string} sourceUrl Source URL
+    * @param {number} _itemId Item id
+    */
+    getEntityVersionHistoryUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string>;
     /**
      * Update enity item
      *
