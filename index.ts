@@ -95,7 +95,7 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.list.select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
             if (sourceUrl) {
@@ -118,7 +118,7 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { ID }] = await Promise.all([
                 _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.list.select('ID').get(),
+                this.list.select('ID', 'DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
             ]);
             let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${ID}&ID=${itemId}`;
             if (sourceUrl) {
