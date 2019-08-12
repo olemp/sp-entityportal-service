@@ -1,36 +1,42 @@
-import { sp, Web, List, Item, Fields } from '@pnp/sp';
+import { sp, Web, List, ContentType, Item, Fields } from '@pnp/sp';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 
-sp.setup({  defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
+sp.setup({ defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
 
 
 export default class SpEntityPortalService {
-    private web: Web;
-    private list: List;
-    private contentType: any;
-    private fields: Fields;
+    private _web: Web;
+    private _list: List;
+    private _contentType: ContentType;
+    private _fields: IEntityField[];
+    private _item: any;
 
     constructor(private params: ISpEntityPortalServiceParams) {
-        this.web = new Web(this.params.webUrl);
-        this.list = this.web.lists.getByTitle(this.params.listName);
+        this._web = new Web(this.params.webUrl);
+        this._list = this._web.lists.getByTitle(this.params.listName);
         if (this.params.contentTypeId && this.params.fieldsGroupName) {
-            this.contentType = this.web.contentTypes.getById(this.params.contentTypeId);
-            this.fields = this.contentType.fields.filter(`Group eq '${this.params.fieldsGroupName}'`);
+            this._contentType = this._web.contentTypes.getById(this.params.contentTypeId);
         }
     }
 
     /**
-     * Get entity item fields
+     * Get entity fields
      */
     public async getEntityFields(): Promise<IEntityField[]> {
-        if (!this.fields) {
+        if (!this._contentType) {
             return null;
         }
         try {
-            return this.fields.select('InternalName', 'Title', 'TypeAsString', 'SchemaXml').usingCaching().get<IEntityField[]>();
+            if (this._fields) return this._fields;
+            this._fields = await this._contentType.fields
+                .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
+                .filter(`Group eq '${this.params.fieldsGroupName}'`)
+                .usingCaching()
+                .get<IEntityField[]>();
+            return this._fields;
         } catch (e) {
             throw e;
         }
@@ -47,12 +53,9 @@ export default class SpEntityPortalService {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
             }
-            const [item] = await this.list.items.filter(`${this.params.identityFieldName} eq '${identity}'`).usingCaching().get();
-            if (item) {
-                return item;
-            } else {
-                throw `Found no enity item with identity ${identity}`;
-            }
+            if (this._item) return this._item;
+            this._item = (await this._list.items.filter(`${this.params.identityFieldName} eq '${identity}'`).usingCaching().get())[0];
+            return this._item;
         } catch (e) {
             throw e;
         }
@@ -80,7 +83,7 @@ export default class SpEntityPortalService {
     public async getEntityItemFieldValues(identity: string): Promise<{ [key: string]: any }> {
         try {
             const itemId = await this.getEntityItemId(identity);
-            const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.usingCaching().get();
+            const itemFieldValues = await this._list.items.getById(itemId).fieldValuesAsText.usingCaching().get();
             return itemFieldValues;
         } catch (e) {
             throw e;
@@ -97,7 +100,7 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 this.getEntityItemId(identity),
-                this.web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').usingCaching().get(),
+                this._web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').usingCaching().get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
             if (sourceUrl) {
@@ -119,9 +122,9 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { Id }] = await Promise.all([
                 this.getEntityItemId(identity),
-                this.web.lists.getByTitle(this.params.listName).select('Id').usingCaching().get(),
+                this._web.lists.getByTitle(this.params.listName).select('Id').usingCaching().get(),
             ]);
-            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
+            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?_list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
                 editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
             }
@@ -140,7 +143,7 @@ export default class SpEntityPortalService {
     public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<void> {
         try {
             const itemId = await this.getEntityItemId(identity);
-            await this.list.items.getById(itemId).update(properties);
+            await this._list.items.getById(itemId).update(properties);
         } catch (e) {
             throw e;
         }
@@ -161,7 +164,7 @@ export default class SpEntityPortalService {
             if (this.params.urlFieldName) {
                 properties[this.params.urlFieldName] = url;
             }
-            const { data, item } = await this.list.items.add(properties);
+            const { data, item } = await this._list.items.add(properties);
             if (permissions) {
                 await this.setEntityPermissions(item, permissions);
             }
@@ -182,18 +185,18 @@ export default class SpEntityPortalService {
         await item.breakRoleInheritance(false, true);
         if (fullControlPrincipals) {
             for (let i = 0; i < fullControlPrincipals.length; i++) {
-                let principal = await this.web.ensureUser(fullControlPrincipals[i]);
+                let principal = await this._web.ensureUser(fullControlPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741829);
             }
         }
         if (readPrincipals) {
             for (let i = 0; i < readPrincipals.length; i++) {
-                let principal = await this.web.ensureUser(readPrincipals[i]);
+                let principal = await this._web.ensureUser(readPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741826);
             }
         }
         if (addEveryoneRead) {
-            const [everyonePrincipal] = await this.web.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
+            const [everyonePrincipal] = await this._web.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
             await item.roleAssignments.add(everyonePrincipal.Id, 1073741826);
         }
     }
