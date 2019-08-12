@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
+sp_1.sp.setup({ defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
 var SpEntityPortalService = /** @class */ (function () {
     function SpEntityPortalService(params) {
         this.params = params;

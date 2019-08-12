@@ -29,7 +29,7 @@ export default class SpEntityPortalService {
             return null;
         }
         try {
-            return this.fields.select('InternalName', 'Title', 'TypeAsString', 'SchemaXml').get<IEntityField[]>();
+            return this.fields.select('InternalName', 'Title', 'TypeAsString', 'SchemaXml').usingCaching().get<IEntityField[]>();
         } catch (e) {
             throw e;
         }
@@ -46,7 +46,7 @@ export default class SpEntityPortalService {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
             }
-            const [item] = await this.list.items.filter(`${this.params.identityFieldName} eq '${identity}'`).get();
+            const [item] = await this.list.items.filter(`${this.params.identityFieldName} eq '${identity}'`).usingCaching().get();
             if (item) {
                 return item;
             } else {
@@ -79,7 +79,7 @@ export default class SpEntityPortalService {
     public async getEntityItemFieldValues(identity: string): Promise<{ [key: string]: any }> {
         try {
             const itemId = await this.getEntityItemId(identity);
-            const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.get();
+            const itemFieldValues = await this.list.items.getById(itemId).fieldValuesAsText.usingCaching().get();
             return itemFieldValues;
         } catch (e) {
             throw e;
@@ -91,13 +91,12 @@ export default class SpEntityPortalService {
     * 
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
-    * @param {number} _itemId Item id
     */
-    public async getEntityEditFormUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string> {
+    public async getEntityEditFormUrl(identity: string, sourceUrl: string): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
-                _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').get(),
+                this.getEntityItemId(identity),
+                this.web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').usingCaching().get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
             if (sourceUrl) {
@@ -114,13 +113,12 @@ export default class SpEntityPortalService {
     * 
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
-    * @param {number} _itemId Item id
     */
-    public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string> {
+    public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string): Promise<string> {
         try {
             const [itemId, { Id }] = await Promise.all([
-                _itemId ? (async () => _itemId)() : this.getEntityItemId(identity),
-                this.web.lists.getByTitle(this.params.listName).select('Id').get(),
+                this.getEntityItemId(identity),
+                this.web.lists.getByTitle(this.params.listName).select('Id').usingCaching().get(),
             ]);
             let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
@@ -166,7 +164,7 @@ export default class SpEntityPortalService {
             if (permissions) {
                 await this.setEntityPermissions(item, permissions);
             }
-            const editFormUrl = await this.getEntityEditFormUrl(identity, sourceUrl, data.Id);
+            const editFormUrl = await this.getEntityEditFormUrl(identity, sourceUrl);
             return { item: data, editFormUrl };
         } catch (e) {
             throw e;
