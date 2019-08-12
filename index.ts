@@ -1,8 +1,10 @@
-import { Web, List, Item, Fields } from '@pnp/sp';
+import { sp, Web, List, Item, Fields } from '@pnp/sp';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
+
+sp.setup({ defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
 
 export default class SpEntityPortalService {
     private web: Web;

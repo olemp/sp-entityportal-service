@@ -277,7 +277,7 @@ var SpEntityPortalService = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _c.trys.push([0, 5, , 6]);
-                        properties = __assign((_a = { Title: '' }, _a[this.params.identityFieldName] = identity, _a), additionalProperties);
+                        properties = __assign((_a = {}, _a[this.params.identityFieldName] = identity, _a), additionalProperties);
                         if (this.params.urlFieldName) {
                             properties[this.params.urlFieldName] = url;
                         }
