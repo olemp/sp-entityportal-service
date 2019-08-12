@@ -5,8 +5,6 @@ import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 
-sp.setup({ defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
-
 
 export default class SpEntityPortalService {
     private _web: Web;
@@ -23,8 +21,10 @@ export default class SpEntityPortalService {
 
     /**
      * Get entity fields
+     * 
+     * @param {Date} expiration Expiration
      */
-    public async getEntityFields(): Promise<IEntityField[]> {
+    public async getEntityFields(expiration: Date = dateAdd(new Date(), 'hour', 1)): Promise<IEntityField[]> {
         if (!this._contentType) {
             return null;
         }
@@ -32,7 +32,11 @@ export default class SpEntityPortalService {
             return await this._contentType.fields
                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
                 .filter(`Group eq '${this.params.fieldsGroupName}'`)
-                .usingCaching()
+                .usingCaching({
+                    key: `spentityportalservice_getentityfields`,
+                    storeName: 'local',
+                    expiration,
+                })
                 .get<IEntityField[]>();
         } catch (e) {
             throw e;
@@ -44,8 +48,9 @@ export default class SpEntityPortalService {
      * Get entity item
      * 
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    public async getEntityItem(identity: string): Promise<{ [key: string]: any }> {
+    public async getEntityItem(identity: string, expiration: Date = dateAdd(new Date(), 'hour', 1)): Promise<{ [key: string]: any }> {
         try {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
@@ -54,9 +59,9 @@ export default class SpEntityPortalService {
                 await this._list.items
                     .filter(`${this.params.identityFieldName} eq '${identity}'`)
                     .usingCaching({
-                        key: `entity_item_${identity}`,
+                        key: `spentityportalservice_getentityitem_${identity}`,
                         storeName: 'local',
-                        expiration: dateAdd(new Date(), 'hour', 1),
+                        expiration,
                     })
                     .get()
             )[0];
@@ -83,17 +88,18 @@ export default class SpEntityPortalService {
      * Get entity item field values
      * 
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    public async getEntityItemFieldValues(identity: string): Promise<{ [key: string]: any }> {
+    public async getEntityItemFieldValues(identity: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<{ [key: string]: any }> {
         try {
             const itemId = await this.getEntityItemId(identity);
             const itemFieldValues = await this._list.items
                 .getById(itemId)
                 .fieldValuesAsText
                 .usingCaching({
-                    key: `getentityitemfieldvalues_${identity}`,
+                    key: `spentityportalservice_getentityitemfieldvalues_${identity}`,
                     storeName: 'local',
-                    expiration: dateAdd(new Date(), 'minute', 5),
+                    expiration,
                 })
                 .get();
             return itemFieldValues;
@@ -107,8 +113,9 @@ export default class SpEntityPortalService {
     * 
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    public async getEntityEditFormUrl(identity: string, sourceUrl: string): Promise<string> {
+    public async getEntityEditFormUrl(identity: string, sourceUrl: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<string> {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 this.getEntityItemId(identity),
@@ -116,9 +123,9 @@ export default class SpEntityPortalService {
                     .select('DefaultEditFormUrl')
                     .expand('DefaultEditFormUrl')
                     .usingCaching({
-                        key: `getentityeditformurl_${identity}`,
+                        key: `spentityportalservice_getentityeditformurl_${identity}`,
                         storeName: 'local',
-                        expiration: dateAdd(new Date(), 'minute', 5),
+                        expiration,
                     })
                     .get(),
             ]);
@@ -137,17 +144,18 @@ export default class SpEntityPortalService {
     * 
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string): Promise<string> {
+    public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<string> {
         try {
             const [itemId, { Id }] = await Promise.all([
                 this.getEntityItemId(identity),
                 this._web.lists.getByTitle(this.params.listName)
                     .select('Id')
                     .usingCaching({
-                        key: `getentityversionhistoryurl_${identity}`,
+                        key: `spentityportalservice_getentityversionhistoryurl_${identity}`,
                         storeName: 'local',
-                        expiration: dateAdd(new Date(), 'minute', 5),
+                        expiration,
                     })
                     .get(),
             ]);

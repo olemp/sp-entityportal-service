@@ -7,8 +7,6 @@ export default class SpEntityPortalService {
     private _web;
     private _list;
     private _contentType;
-    private _fields;
-    private _item;
     constructor(params: ISpEntityPortalServiceParams);
     /**
      * Get entity fields

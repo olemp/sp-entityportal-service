@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
+var common_1 = require("@pnp/common");
 sp_1.sp.setup({ defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
 var SpEntityPortalService = /** @class */ (function () {
     function SpEntityPortalService(params) {
@@ -62,29 +63,24 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityFields = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         if (!this._contentType) {
                             return [2 /*return*/, null];
                         }
-                        _b.label = 1;
+                        _a.label = 1;
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        if (this._fields)
-                            return [2 /*return*/, this._fields];
-                        _a = this;
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this._contentType.fields
                                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
                                 .filter("Group eq '" + this.params.fieldsGroupName + "'")
                                 .usingCaching()
                                 .get()];
-                    case 2:
-                        _a._fields = _b.sent();
-                        return [2 /*return*/, this._fields];
+                    case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        e_1 = _b.sent();
+                        e_1 = _a.sent();
                         throw e_1;
                     case 4: return [2 /*return*/];
                 }
@@ -98,23 +94,25 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityItem = function (identity) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 2, , 3]);
                         if (identity.length === 38) {
                             identity = identity.substring(1, 37);
                         }
-                        if (this._item)
-                            return [2 /*return*/, this._item];
-                        _a = this;
-                        return [4 /*yield*/, this._list.items.filter(this.params.identityFieldName + " eq '" + identity + "'").usingCaching().get()];
-                    case 1:
-                        _a._item = (_b.sent())[0];
-                        return [2 /*return*/, this._item];
+                        return [4 /*yield*/, this._list.items
+                                .filter(this.params.identityFieldName + " eq '" + identity + "'")
+                                .usingCaching({
+                                key: "entity_item_" + identity,
+                                storeName: 'local',
+                                expiration: common_1.dateAdd(new Date(), 'hour', 1),
+                            })
+                                .get()];
+                    case 1: return [2 /*return*/, (_a.sent())[0]];
                     case 2:
-                        e_2 = _b.sent();
+                        e_2 = _a.sent();
                         throw e_2;
                     case 3: return [2 /*return*/];
                 }
@@ -160,7 +158,15 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, this.getEntityItemId(identity)];
                     case 1:
                         itemId = _a.sent();
-                        return [4 /*yield*/, this._list.items.getById(itemId).fieldValuesAsText.usingCaching().get()];
+                        return [4 /*yield*/, this._list.items
+                                .getById(itemId)
+                                .fieldValuesAsText
+                                .usingCaching({
+                                key: "getentityitemfieldvalues_" + identity,
+                                storeName: 'local',
+                                expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                            })
+                                .get()];
                     case 2:
                         itemFieldValues = _a.sent();
                         return [2 /*return*/, itemFieldValues];
@@ -187,7 +193,15 @@ var SpEntityPortalService = /** @class */ (function () {
                         _b.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, Promise.all([
                                 this.getEntityItemId(identity),
-                                this._web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').usingCaching().get(),
+                                this._web.lists.getByTitle(this.params.listName)
+                                    .select('DefaultEditFormUrl')
+                                    .expand('DefaultEditFormUrl')
+                                    .usingCaching({
+                                    key: "getentityeditformurl_" + identity,
+                                    storeName: 'local',
+                                    expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                                })
+                                    .get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], DefaultEditFormUrl = _a[1].DefaultEditFormUrl;
@@ -219,7 +233,14 @@ var SpEntityPortalService = /** @class */ (function () {
                         _b.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, Promise.all([
                                 this.getEntityItemId(identity),
-                                this._web.lists.getByTitle(this.params.listName).select('Id').usingCaching().get(),
+                                this._web.lists.getByTitle(this.params.listName)
+                                    .select('Id')
+                                    .usingCaching({
+                                    key: "getentityversionhistoryurl_" + identity,
+                                    storeName: 'local',
+                                    expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                                })
+                                    .get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], Id = _a[1].Id;
