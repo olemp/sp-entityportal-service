@@ -156,7 +156,7 @@ export default class SpEntityPortalService {
      */
     public async newEntity(identity: string, url: string, additionalProperties?: { [key: string]: any }, sourceUrl: string = null, permissions?: INewEntityPermissions): Promise<INewEntityResult> {
         try {
-            let properties = { Title: '', [this.params.identityFieldName]: identity, ...additionalProperties };
+            let properties = { [this.params.identityFieldName]: identity, ...additionalProperties };
             if (this.params.urlFieldName) {
                 properties[this.params.urlFieldName] = url;
             }
