@@ -1,4 +1,5 @@
-import { sp, Web, List, ContentType, Item, Fields } from '@pnp/sp';
+import { sp, Web, List, ContentType, Item, } from '@pnp/sp';
+import { dateAdd } from '@pnp/common';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
@@ -11,8 +12,6 @@ export default class SpEntityPortalService {
     private _web: Web;
     private _list: List;
     private _contentType: ContentType;
-    private _fields: IEntityField[];
-    private _item: any;
 
     constructor(private params: ISpEntityPortalServiceParams) {
         this._web = new Web(this.params.webUrl);
@@ -30,13 +29,11 @@ export default class SpEntityPortalService {
             return null;
         }
         try {
-            if (this._fields) return this._fields;
-            this._fields = await this._contentType.fields
+            return await this._contentType.fields
                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
                 .filter(`Group eq '${this.params.fieldsGroupName}'`)
                 .usingCaching()
                 .get<IEntityField[]>();
-            return this._fields;
         } catch (e) {
             throw e;
         }
@@ -53,9 +50,16 @@ export default class SpEntityPortalService {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
             }
-            if (this._item) return this._item;
-            this._item = (await this._list.items.filter(`${this.params.identityFieldName} eq '${identity}'`).usingCaching().get())[0];
-            return this._item;
+            return (
+                await this._list.items
+                    .filter(`${this.params.identityFieldName} eq '${identity}'`)
+                    .usingCaching({
+                        key: `entity_item_${identity}`,
+                        storeName: 'local',
+                        expiration: dateAdd(new Date(), 'hour', 1),
+                    })
+                    .get()
+            )[0];
         } catch (e) {
             throw e;
         }
@@ -83,7 +87,15 @@ export default class SpEntityPortalService {
     public async getEntityItemFieldValues(identity: string): Promise<{ [key: string]: any }> {
         try {
             const itemId = await this.getEntityItemId(identity);
-            const itemFieldValues = await this._list.items.getById(itemId).fieldValuesAsText.usingCaching().get();
+            const itemFieldValues = await this._list.items
+                .getById(itemId)
+                .fieldValuesAsText
+                .usingCaching({
+                    key: `getentityitemfieldvalues_${identity}`,
+                    storeName: 'local',
+                    expiration: dateAdd(new Date(), 'minute', 5),
+                })
+                .get();
             return itemFieldValues;
         } catch (e) {
             throw e;
@@ -100,7 +112,15 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { DefaultEditFormUrl }] = await Promise.all([
                 this.getEntityItemId(identity),
-                this._web.lists.getByTitle(this.params.listName).select('DefaultEditFormUrl').expand('DefaultEditFormUrl').usingCaching().get(),
+                this._web.lists.getByTitle(this.params.listName)
+                    .select('DefaultEditFormUrl')
+                    .expand('DefaultEditFormUrl')
+                    .usingCaching({
+                        key: `getentityeditformurl_${identity}`,
+                        storeName: 'local',
+                        expiration: dateAdd(new Date(), 'minute', 5),
+                    })
+                    .get(),
             ]);
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
             if (sourceUrl) {
@@ -122,7 +142,14 @@ export default class SpEntityPortalService {
         try {
             const [itemId, { Id }] = await Promise.all([
                 this.getEntityItemId(identity),
-                this._web.lists.getByTitle(this.params.listName).select('Id').usingCaching().get(),
+                this._web.lists.getByTitle(this.params.listName)
+                    .select('Id')
+                    .usingCaching({
+                        key: `getentityversionhistoryurl_${identity}`,
+                        storeName: 'local',
+                        expiration: dateAdd(new Date(), 'minute', 5),
+                    })
+                    .get(),
             ]);
             let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?_list=${Id}&ID=${itemId}`;
             if (sourceUrl) {

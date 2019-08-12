@@ -4,13 +4,14 @@ import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 export default class SpEntityPortalService {
     private params;
-    private web;
-    private list;
-    private contentType;
-    private fields;
+    private _web;
+    private _list;
+    private _contentType;
+    private _fields;
+    private _item;
     constructor(params: ISpEntityPortalServiceParams);
     /**
-     * Get entity item fields
+     * Get entity fields
      */
     getEntityFields(): Promise<IEntityField[]>;
     /**
