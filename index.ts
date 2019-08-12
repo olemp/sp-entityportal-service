@@ -4,7 +4,8 @@ import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
 
-sp.setup({ defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
+sp.setup({  defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
+
 
 export default class SpEntityPortalService {
     private web: Web;

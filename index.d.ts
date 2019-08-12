@@ -40,17 +40,15 @@ export default class SpEntityPortalService {
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
-    * @param {number} _itemId Item id
     */
-    getEntityEditFormUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string>;
+    getEntityEditFormUrl(identity: string, sourceUrl: string): Promise<string>;
     /**
     * Get entity version history url
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
-    * @param {number} _itemId Item id
     */
-    getEntityVersionHistoryUrl(identity: string, sourceUrl: string, _itemId?: number): Promise<string>;
+    getEntityVersionHistoryUrl(identity: string, sourceUrl: string): Promise<string>;
     /**
      * Update enity item
      *
