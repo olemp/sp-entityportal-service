@@ -10,14 +10,17 @@ export default class SpEntityPortalService {
     constructor(params: ISpEntityPortalServiceParams);
     /**
      * Get entity fields
+     *
+     * @param {Date} expiration Expiration
      */
-    getEntityFields(): Promise<IEntityField[]>;
+    getEntityFields(expiration?: Date): Promise<IEntityField[]>;
     /**
      * Get entity item
      *
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    getEntityItem(identity: string): Promise<{
+    getEntityItem(identity: string, expiration?: Date): Promise<{
         [key: string]: any;
     }>;
     /**
@@ -30,8 +33,9 @@ export default class SpEntityPortalService {
      * Get entity item field values
      *
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    getEntityItemFieldValues(identity: string): Promise<{
+    getEntityItemFieldValues(identity: string, expiration?: Date): Promise<{
         [key: string]: any;
     }>;
     /**
@@ -39,15 +43,17 @@ export default class SpEntityPortalService {
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    getEntityEditFormUrl(identity: string, sourceUrl: string): Promise<string>;
+    getEntityEditFormUrl(identity: string, sourceUrl: string, expiration?: Date): Promise<string>;
     /**
     * Get entity version history url
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    getEntityVersionHistoryUrl(identity: string, sourceUrl: string): Promise<string>;
+    getEntityVersionHistoryUrl(identity: string, sourceUrl: string, expiration?: Date): Promise<string>;
     /**
      * Update enity item
      *

@@ -159,7 +159,7 @@ export default class SpEntityPortalService {
                     })
                     .get(),
             ]);
-            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?_list=${Id}&ID=${itemId}`;
+            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
                 editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
             }

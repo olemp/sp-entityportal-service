@@ -48,7 +48,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
 var common_1 = require("@pnp/common");
-sp_1.sp.setup({ defaultCachingStore: "session", defaultCachingTimeoutSeconds: 60, globalCacheDisable: false });
 var SpEntityPortalService = /** @class */ (function () {
     function SpEntityPortalService(params) {
         this.params = params;
@@ -60,8 +59,11 @@ var SpEntityPortalService = /** @class */ (function () {
     }
     /**
      * Get entity fields
+     *
+     * @param {Date} expiration Expiration
      */
-    SpEntityPortalService.prototype.getEntityFields = function () {
+    SpEntityPortalService.prototype.getEntityFields = function (expiration) {
+        if (expiration === void 0) { expiration = common_1.dateAdd(new Date(), 'hour', 1); }
         return __awaiter(this, void 0, void 0, function () {
             var e_1;
             return __generator(this, function (_a) {
@@ -76,7 +78,11 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, this._contentType.fields
                                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
                                 .filter("Group eq '" + this.params.fieldsGroupName + "'")
-                                .usingCaching()
+                                .usingCaching({
+                                key: "spentityportalservice_getentityfields",
+                                storeName: 'local',
+                                expiration: expiration,
+                            })
                                 .get()];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
@@ -91,8 +97,10 @@ var SpEntityPortalService = /** @class */ (function () {
      * Get entity item
      *
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    SpEntityPortalService.prototype.getEntityItem = function (identity) {
+    SpEntityPortalService.prototype.getEntityItem = function (identity, expiration) {
+        if (expiration === void 0) { expiration = common_1.dateAdd(new Date(), 'hour', 1); }
         return __awaiter(this, void 0, void 0, function () {
             var e_2;
             return __generator(this, function (_a) {
@@ -105,9 +113,9 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [4 /*yield*/, this._list.items
                                 .filter(this.params.identityFieldName + " eq '" + identity + "'")
                                 .usingCaching({
-                                key: "entity_item_" + identity,
+                                key: "spentityportalservice_getentityitem_" + identity,
                                 storeName: 'local',
-                                expiration: common_1.dateAdd(new Date(), 'hour', 1),
+                                expiration: expiration,
                             })
                                 .get()];
                     case 1: return [2 /*return*/, (_a.sent())[0]];
@@ -147,8 +155,10 @@ var SpEntityPortalService = /** @class */ (function () {
      * Get entity item field values
      *
      * @param {string} identity Identity
+     * @param {Date} expiration Expiration
      */
-    SpEntityPortalService.prototype.getEntityItemFieldValues = function (identity) {
+    SpEntityPortalService.prototype.getEntityItemFieldValues = function (identity, expiration) {
+        if (expiration === void 0) { expiration = common_1.dateAdd(new Date(), 'minute', 5); }
         return __awaiter(this, void 0, void 0, function () {
             var itemId, itemFieldValues, e_4;
             return __generator(this, function (_a) {
@@ -162,9 +172,9 @@ var SpEntityPortalService = /** @class */ (function () {
                                 .getById(itemId)
                                 .fieldValuesAsText
                                 .usingCaching({
-                                key: "getentityitemfieldvalues_" + identity,
+                                key: "spentityportalservice_getentityitemfieldvalues_" + identity,
                                 storeName: 'local',
-                                expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                                expiration: expiration,
                             })
                                 .get()];
                     case 2:
@@ -183,8 +193,10 @@ var SpEntityPortalService = /** @class */ (function () {
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    SpEntityPortalService.prototype.getEntityEditFormUrl = function (identity, sourceUrl) {
+    SpEntityPortalService.prototype.getEntityEditFormUrl = function (identity, sourceUrl, expiration) {
+        if (expiration === void 0) { expiration = common_1.dateAdd(new Date(), 'minute', 5); }
         return __awaiter(this, void 0, void 0, function () {
             var _a, itemId, DefaultEditFormUrl, editFormUrl, e_5;
             return __generator(this, function (_b) {
@@ -197,9 +209,9 @@ var SpEntityPortalService = /** @class */ (function () {
                                     .select('DefaultEditFormUrl')
                                     .expand('DefaultEditFormUrl')
                                     .usingCaching({
-                                    key: "getentityeditformurl_" + identity,
+                                    key: "spentityportalservice_getentityeditformurl_" + identity,
                                     storeName: 'local',
-                                    expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                                    expiration: expiration,
                                 })
                                     .get(),
                             ])];
@@ -223,8 +235,10 @@ var SpEntityPortalService = /** @class */ (function () {
     *
     * @param {string} identity Identity
     * @param {string} sourceUrl Source URL
+     * @param {Date} expiration Expiration
     */
-    SpEntityPortalService.prototype.getEntityVersionHistoryUrl = function (identity, sourceUrl) {
+    SpEntityPortalService.prototype.getEntityVersionHistoryUrl = function (identity, sourceUrl, expiration) {
+        if (expiration === void 0) { expiration = common_1.dateAdd(new Date(), 'minute', 5); }
         return __awaiter(this, void 0, void 0, function () {
             var _a, itemId, Id, editFormUrl, e_6;
             return __generator(this, function (_b) {
@@ -236,15 +250,15 @@ var SpEntityPortalService = /** @class */ (function () {
                                 this._web.lists.getByTitle(this.params.listName)
                                     .select('Id')
                                     .usingCaching({
-                                    key: "getentityversionhistoryurl_" + identity,
+                                    key: "spentityportalservice_getentityversionhistoryurl_" + identity,
                                     storeName: 'local',
-                                    expiration: common_1.dateAdd(new Date(), 'minute', 5),
+                                    expiration: expiration,
                                 })
                                     .get(),
                             ])];
                     case 1:
                         _a = _b.sent(), itemId = _a[0], Id = _a[1].Id;
-                        editFormUrl = this.params.webUrl + "/_layouts/15/versions.aspx?_list=" + Id + "&ID=" + itemId;
+                        editFormUrl = this.params.webUrl + "/_layouts/15/versions.aspx?list=" + Id + "&ID=" + itemId;
                         if (sourceUrl) {
                             editFormUrl += "&Source=" + encodeURIComponent(sourceUrl);
                         }
