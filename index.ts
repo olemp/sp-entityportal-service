@@ -1,12 +1,13 @@
-import { sp, Web, List, ContentType, Item, } from '@pnp/sp';
-import { dateAdd } from '@pnp/common';
+import { Web, List, ContentType, Item, } from '@pnp/sp';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
+import { IEntityItem } from './IEntityItem';
+import { IEntityUrls } from './IEntityUrls';
+import { IEntity } from './IEntity';
 
-
-export default class SpEntityPortalService {
+export class SpEntityPortalService {
     private _web: Web;
     private _list: List;
     private _contentType: ContentType;
@@ -20,26 +21,37 @@ export default class SpEntityPortalService {
     }
 
     /**
-     * Get entity fields
+     * Get entity item
      * 
-     * @param {Date} expiration Expiration
+     * @param {string} identity Identity
+     * @param {string} sourceUrl Source URL used to generate URLs
      */
-    public async getEntityFields(expiration: Date = dateAdd(new Date(), 'hour', 1)): Promise<IEntityField[]> {
+    public async fetchEntity(identity: string, sourceUrl: string): Promise<IEntity> {
+        let [item, fields] = await Promise.all([
+            this.getEntityItem(identity),
+            this.getEntityFields(),
+        ]);
+        let [urls, fieldValues] = await Promise.all([
+            this.getEntityUrls(item.Id, sourceUrl),
+            this.getEntityItemFieldValues(item.Id),
+        ]);
+        return { item, fields, urls, fieldValues };
+    }
+
+    /**
+     * Get entity fields 
+     */
+    protected async getEntityFields(): Promise<IEntityField[]> {
         if (!this._contentType) {
-            return null;
+            return [];
         }
         try {
             return await this._contentType.fields
                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
                 .filter(`Group eq '${this.params.fieldsGroupName}'`)
-                .usingCaching({
-                    key: `spentityportalservice_getentityfields`,
-                    storeName: 'local',
-                    expiration,
-                })
                 .get<IEntityField[]>();
         } catch (e) {
-            throw e;
+            return [];
         }
     }
 
@@ -48,9 +60,8 @@ export default class SpEntityPortalService {
      * Get entity item
      * 
      * @param {string} identity Identity
-     * @param {Date} expiration Expiration
      */
-    public async getEntityItem(identity: string, expiration: Date = dateAdd(new Date(), 'hour', 1)): Promise<{ [key: string]: any }> {
+    protected async getEntityItem(identity: string): Promise<IEntityItem> {
         try {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
@@ -58,11 +69,6 @@ export default class SpEntityPortalService {
             return (
                 await this._list.items
                     .filter(`${this.params.identityFieldName} eq '${identity}'`)
-                    .usingCaching({
-                        key: `spentityportalservice_getentityitem_${identity}`,
-                        storeName: 'local',
-                        expiration,
-                    })
                     .get()
             )[0];
         } catch (e) {
@@ -71,99 +77,40 @@ export default class SpEntityPortalService {
     }
 
     /**
-     * Get entity item ID
-     * 
-     * @param {string} identity Identity
-     */
-    public async getEntityItemId(identity: string): Promise<number> {
-        try {
-            const item = await this.getEntityItem(identity);
-            return item.Id;
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    /**
      * Get entity item field values
      * 
-     * @param {string} identity Identity
-     * @param {Date} expiration Expiration
+    * @param {number} itemId Item id
      */
-    public async getEntityItemFieldValues(identity: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<{ [key: string]: any }> {
+    protected async getEntityItemFieldValues(itemId: number): Promise<{ [key: string]: any }> {
         try {
-            const itemId = await this.getEntityItemId(identity);
-            const itemFieldValues = await this._list.items
+            return await this._list.items
                 .getById(itemId)
                 .fieldValuesAsText
-                .usingCaching({
-                    key: `spentityportalservice_getentityitemfieldvalues_${identity}`,
-                    storeName: 'local',
-                    expiration,
-                })
                 .get();
-            return itemFieldValues;
         } catch (e) {
             throw e;
         }
     }
 
     /**
-    * Get entity edit form url
+    * Get entity urls
     * 
-    * @param {string} identity Identity
+    * @param {number} itemId Item id
     * @param {string} sourceUrl Source URL
-     * @param {Date} expiration Expiration
     */
-    public async getEntityEditFormUrl(identity: string, sourceUrl: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<string> {
+    protected async getEntityUrls(itemId: number, sourceUrl: string): Promise<IEntityUrls> {
         try {
-            const [itemId, { DefaultEditFormUrl }] = await Promise.all([
-                this.getEntityItemId(identity),
-                this._web.lists.getByTitle(this.params.listName)
-                    .select('DefaultEditFormUrl')
-                    .expand('DefaultEditFormUrl')
-                    .usingCaching({
-                        key: `spentityportalservice_getentityeditformurl_${identity}`,
-                        storeName: 'local',
-                        expiration,
-                    })
-                    .get(),
-            ]);
+            const { Id, DefaultEditFormUrl } = await this._list
+                .select('DefaultEditFormUrl', 'Id')
+                .expand('DefaultEditFormUrl')
+                .get<{ Id: string, DefaultEditFormUrl: string }>();
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
+            let versionHistoryUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
                 editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
+                versionHistoryUrl = `&Source=${encodeURIComponent(sourceUrl)}`;
             }
-            return editFormUrl;
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    /**
-    * Get entity version history url
-    * 
-    * @param {string} identity Identity
-    * @param {string} sourceUrl Source URL
-     * @param {Date} expiration Expiration
-    */
-    public async getEntityVersionHistoryUrl(identity: string, sourceUrl: string, expiration: Date = dateAdd(new Date(), 'minute', 5)): Promise<string> {
-        try {
-            const [itemId, { Id }] = await Promise.all([
-                this.getEntityItemId(identity),
-                this._web.lists.getByTitle(this.params.listName)
-                    .select('Id')
-                    .usingCaching({
-                        key: `spentityportalservice_getentityversionhistoryurl_${identity}`,
-                        storeName: 'local',
-                        expiration,
-                    })
-                    .get(),
-            ]);
-            let editFormUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
-            if (sourceUrl) {
-                editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
-            }
-            return editFormUrl;
+            return { editFormUrl, versionHistoryUrl };
         } catch (e) {
             throw e;
         }
@@ -177,8 +124,8 @@ export default class SpEntityPortalService {
      */
     public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<void> {
         try {
-            const itemId = await this.getEntityItemId(identity);
-            await this._list.items.getById(itemId).update(properties);
+            const item = await this.getEntityItem(identity);
+            await this._list.items.getById(item.Id).update(properties);
         } catch (e) {
             throw e;
         }
@@ -203,7 +150,7 @@ export default class SpEntityPortalService {
             if (permissions) {
                 await this.setEntityPermissions(item, permissions);
             }
-            const editFormUrl = await this.getEntityEditFormUrl(identity, sourceUrl);
+            const { editFormUrl } = await this.getEntityUrls(data.Id, sourceUrl);
             return { item: data, editFormUrl };
         } catch (e) {
             throw e;
@@ -237,4 +184,4 @@ export default class SpEntityPortalService {
     }
 }
 
-export { ISpEntityPortalServiceParams };
+export { ISpEntityPortalServiceParams, INewEntityResult, IEntityField, IEntityItem, IEntity, IEntityUrls };

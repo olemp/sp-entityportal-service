@@ -2,58 +2,47 @@ import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { INewEntityResult } from './INewEntityResult';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { IEntityField } from './IEntityField';
-export default class SpEntityPortalService {
+import { IEntityItem } from './IEntityItem';
+import { IEntityUrls } from './IEntityUrls';
+import { IEntity } from './IEntity';
+export declare class SpEntityPortalService {
     private params;
     private _web;
     private _list;
     private _contentType;
     constructor(params: ISpEntityPortalServiceParams);
     /**
-     * Get entity fields
+     * Get entity item
      *
-     * @param {Date} expiration Expiration
+     * @param {string} identity Identity
+     * @param {string} sourceUrl Source URL used to generate URLs
      */
-    getEntityFields(expiration?: Date): Promise<IEntityField[]>;
+    fetchEntity(identity: string, sourceUrl: string): Promise<IEntity>;
+    /**
+     * Get entity fields
+     */
+    protected getEntityFields(): Promise<IEntityField[]>;
     /**
      * Get entity item
      *
      * @param {string} identity Identity
-     * @param {Date} expiration Expiration
      */
-    getEntityItem(identity: string, expiration?: Date): Promise<{
-        [key: string]: any;
-    }>;
-    /**
-     * Get entity item ID
-     *
-     * @param {string} identity Identity
-     */
-    getEntityItemId(identity: string): Promise<number>;
+    protected getEntityItem(identity: string): Promise<IEntityItem>;
     /**
      * Get entity item field values
      *
-     * @param {string} identity Identity
-     * @param {Date} expiration Expiration
+    * @param {number} itemId Item id
      */
-    getEntityItemFieldValues(identity: string, expiration?: Date): Promise<{
+    protected getEntityItemFieldValues(itemId: number): Promise<{
         [key: string]: any;
     }>;
     /**
-    * Get entity edit form url
+    * Get entity urls
     *
-    * @param {string} identity Identity
+    * @param {number} itemId Item id
     * @param {string} sourceUrl Source URL
-     * @param {Date} expiration Expiration
     */
-    getEntityEditFormUrl(identity: string, sourceUrl: string, expiration?: Date): Promise<string>;
-    /**
-    * Get entity version history url
-    *
-    * @param {string} identity Identity
-    * @param {string} sourceUrl Source URL
-     * @param {Date} expiration Expiration
-    */
-    getEntityVersionHistoryUrl(identity: string, sourceUrl: string, expiration?: Date): Promise<string>;
+    protected getEntityUrls(itemId: number, sourceUrl: string): Promise<IEntityUrls>;
     /**
      * Update enity item
      *
@@ -83,4 +72,4 @@ export default class SpEntityPortalService {
      */
     private setEntityPermissions;
 }
-export { ISpEntityPortalServiceParams };
+export { ISpEntityPortalServiceParams, INewEntityResult, IEntityField, IEntityItem, IEntity, IEntityUrls };
