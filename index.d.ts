@@ -21,13 +21,13 @@ export declare class SpEntityPortalService {
     /**
      * Get entity fields
      */
-    protected getEntityFields(): Promise<IEntityField[]>;
+    getEntityFields(): Promise<IEntityField[]>;
     /**
      * Get entity item
      *
      * @param {string} identity Identity
      */
-    protected getEntityItem(identity: string): Promise<IEntityItem>;
+    getEntityItem(identity: string): Promise<IEntityItem>;
     /**
      * Get entity item field values
      *

@@ -41,14 +41,14 @@ export class SpEntityPortalService {
     /**
      * Get entity fields 
      */
-    protected async getEntityFields(): Promise<IEntityField[]> {
+    public async getEntityFields(): Promise<IEntityField[]> {
         if (!this._contentType) {
             return [];
         }
         try {
             return await this._contentType.fields
                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
-                .filter(`Group eq '${this.params.fieldsGroupName}'`)
+                .filter(`substringof('${this.params.fieldsGroupName}', Group)`)
                 .get<IEntityField[]>();
         } catch (e) {
             return [];
@@ -61,7 +61,7 @@ export class SpEntityPortalService {
      * 
      * @param {string} identity Identity
      */
-    protected async getEntityItem(identity: string): Promise<IEntityItem> {
+    public async getEntityItem(identity: string): Promise<IEntityItem> {
         try {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);

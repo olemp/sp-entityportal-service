@@ -101,7 +101,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this._contentType.fields
                                 .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
-                                .filter("Group eq '" + this.params.fieldsGroupName + "'")
+                                .filter("substringof('" + this.params.fieldsGroupName + "', Group)")
                                 .get()];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
