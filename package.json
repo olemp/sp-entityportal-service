@@ -1,6 +1,6 @@
 {
   "name": "sp-entityportal-service",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
