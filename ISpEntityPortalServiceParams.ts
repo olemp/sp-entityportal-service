@@ -4,5 +4,5 @@ export interface ISpEntityPortalServiceParams {
     identityFieldName: string;
     urlFieldName?: string;
     contentTypeId?: string;
-    fieldsGroupName?: string;
+    fieldPrefix?: string;
 }

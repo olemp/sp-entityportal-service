@@ -52,7 +52,7 @@ var SpEntityPortalService = /** @class */ (function () {
         this.params = params;
         this._web = new sp_1.Web(this.params.webUrl);
         this._list = this._web.lists.getByTitle(this.params.listName);
-        if (this.params.contentTypeId && this.params.fieldsGroupName) {
+        if (this.params.contentTypeId) {
             this._contentType = this._web.contentTypes.getById(this.params.contentTypeId);
         }
     }
@@ -89,7 +89,7 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     SpEntityPortalService.prototype.getEntityFields = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1;
+            var query, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -99,10 +99,11 @@ var SpEntityPortalService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this._contentType.fields
-                                .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
-                                .filter("substringof('" + this.params.fieldsGroupName + "', Group)")
-                                .get()];
+                        query = this._contentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
+                        if (this.params.fieldPrefix) {
+                            query = query.filter("substringof('" + this.params.fieldPrefix + "', InternalName)");
+                        }
+                        return [4 /*yield*/, query.get()];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         e_1 = _a.sent();
@@ -215,9 +216,7 @@ var SpEntityPortalService = /** @class */ (function () {
                     case 1:
                         item = _a.sent();
                         return [4 /*yield*/, this._list.items.getById(item.Id).update(properties)];
-                    case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
+                    case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         e_5 = _a.sent();
                         throw e_5;
@@ -235,34 +234,30 @@ var SpEntityPortalService = /** @class */ (function () {
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    SpEntityPortalService.prototype.newEntity = function (identity, url, additionalProperties, sourceUrl, permissions) {
-        if (sourceUrl === void 0) { sourceUrl = null; }
+    SpEntityPortalService.prototype.newEntity = function (identity, url, additionalProperties, permissions) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, properties, _b, data, item, editFormUrl, e_6;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var _a, properties, itemAddResult, e_6;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _c.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 4, , 5]);
                         properties = __assign((_a = {}, _a[this.params.identityFieldName] = identity, _a), additionalProperties);
                         if (this.params.urlFieldName) {
                             properties[this.params.urlFieldName] = url;
                         }
                         return [4 /*yield*/, this._list.items.add(properties)];
                     case 1:
-                        _b = _c.sent(), data = _b.data, item = _b.item;
+                        itemAddResult = _b.sent();
                         if (!permissions) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.setEntityPermissions(item, permissions)];
+                        return [4 /*yield*/, this.setEntityPermissions(itemAddResult.item, permissions)];
                     case 2:
-                        _c.sent();
-                        _c.label = 3;
-                    case 3: return [4 /*yield*/, this.getEntityUrls(data.Id, sourceUrl)];
+                        _b.sent();
+                        _b.label = 3;
+                    case 3: return [2 /*return*/, itemAddResult];
                     case 4:
-                        editFormUrl = (_c.sent()).editFormUrl;
-                        return [2 /*return*/, { item: data, editFormUrl: editFormUrl }];
-                    case 5:
-                        e_6 = _c.sent();
+                        e_6 = _b.sent();
                         throw e_6;
-                    case 6: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

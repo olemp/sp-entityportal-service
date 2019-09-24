@@ -1,10 +1,10 @@
-import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
-import { INewEntityResult } from './INewEntityResult';
-import { INewEntityPermissions } from './INewEntityPermissions';
+import { ItemAddResult, ItemUpdateResult } from '@pnp/sp';
+import { IEntity } from './IEntity';
 import { IEntityField } from './IEntityField';
 import { IEntityItem } from './IEntityItem';
 import { IEntityUrls } from './IEntityUrls';
-import { IEntity } from './IEntity';
+import { INewEntityPermissions } from './INewEntityPermissions';
+import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 export declare class SpEntityPortalService {
     private params;
     private _web;
@@ -51,7 +51,7 @@ export declare class SpEntityPortalService {
      */
     updateEntityItem(identity: string, properties: {
         [key: string]: string;
-    }): Promise<void>;
+    }): Promise<ItemUpdateResult>;
     /**
      * New entity
      *
@@ -63,7 +63,7 @@ export declare class SpEntityPortalService {
      */
     newEntity(identity: string, url: string, additionalProperties?: {
         [key: string]: any;
-    }, sourceUrl?: string, permissions?: INewEntityPermissions): Promise<INewEntityResult>;
+    }, permissions?: INewEntityPermissions): Promise<ItemAddResult>;
     /**
      * Set entity permissions
      *
@@ -72,4 +72,4 @@ export declare class SpEntityPortalService {
      */
     private setEntityPermissions;
 }
-export { ISpEntityPortalServiceParams, INewEntityResult, IEntityField, IEntityItem, IEntity, IEntityUrls };
+export { ISpEntityPortalServiceParams, IEntityField, IEntityItem, IEntity, IEntityUrls };

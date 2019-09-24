@@ -1,11 +1,10 @@
-import { Web, List, ContentType, Item, } from '@pnp/sp';
-import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
-import { INewEntityResult } from './INewEntityResult';
-import { INewEntityPermissions } from './INewEntityPermissions';
+import { ContentType, Item, ItemAddResult, ItemUpdateResult, List, Web } from '@pnp/sp';
+import { IEntity } from './IEntity';
 import { IEntityField } from './IEntityField';
 import { IEntityItem } from './IEntityItem';
 import { IEntityUrls } from './IEntityUrls';
-import { IEntity } from './IEntity';
+import { INewEntityPermissions } from './INewEntityPermissions';
+import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 
 export class SpEntityPortalService {
     private _web: Web;
@@ -15,7 +14,7 @@ export class SpEntityPortalService {
     constructor(private params: ISpEntityPortalServiceParams) {
         this._web = new Web(this.params.webUrl);
         this._list = this._web.lists.getByTitle(this.params.listName);
-        if (this.params.contentTypeId && this.params.fieldsGroupName) {
+        if (this.params.contentTypeId) {
             this._contentType = this._web.contentTypes.getById(this.params.contentTypeId);
         }
     }
@@ -46,10 +45,11 @@ export class SpEntityPortalService {
             return [];
         }
         try {
-            return await this._contentType.fields
-                .select('InternalName', 'Title', 'TypeAsString', 'SchemaXml')
-                .filter(`substringof('${this.params.fieldsGroupName}', Group)`)
-                .get<IEntityField[]>();
+            let query = this._contentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
+            if (this.params.fieldPrefix) {
+                query = query.filter(`substringof('${this.params.fieldPrefix}', InternalName)`);
+            }
+            return await query.get<IEntityField[]>();
         } catch (e) {
             return [];
         }
@@ -122,10 +122,10 @@ export class SpEntityPortalService {
      * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<void> {
+    public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<ItemUpdateResult> {
         try {
             const item = await this.getEntityItem(identity);
-            await this._list.items.getById(item.Id).update(properties);
+            return await this._list.items.getById(item.Id).update(properties);
         } catch (e) {
             throw e;
         }
@@ -140,18 +140,17 @@ export class SpEntityPortalService {
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    public async newEntity(identity: string, url: string, additionalProperties?: { [key: string]: any }, sourceUrl: string = null, permissions?: INewEntityPermissions): Promise<INewEntityResult> {
+    public async newEntity(identity: string, url: string, additionalProperties?: { [key: string]: any }, permissions?: INewEntityPermissions): Promise<ItemAddResult> {
         try {
             let properties = { [this.params.identityFieldName]: identity, ...additionalProperties };
             if (this.params.urlFieldName) {
                 properties[this.params.urlFieldName] = url;
             }
-            const { data, item } = await this._list.items.add(properties);
+            let itemAddResult = await this._list.items.add(properties);
             if (permissions) {
-                await this.setEntityPermissions(item, permissions);
+                await this.setEntityPermissions(itemAddResult.item, permissions);
             }
-            const { editFormUrl } = await this.getEntityUrls(data.Id, sourceUrl);
-            return { item: data, editFormUrl };
+            return itemAddResult;
         } catch (e) {
             throw e;
         }
@@ -184,4 +183,4 @@ export class SpEntityPortalService {
     }
 }
 
-export { ISpEntityPortalServiceParams, INewEntityResult, IEntityField, IEntityItem, IEntity, IEntityUrls };
+export { ISpEntityPortalServiceParams, IEntityField, IEntityItem, IEntity, IEntityUrls };
