@@ -1,4 +1,4 @@
-import { ItemAddResult, ItemUpdateResult } from '@pnp/sp';
+import { ItemAddResult, ItemUpdateResult, SPConfiguration } from '@pnp/sp';
 import { IEntity } from './IEntity';
 import { IEntityField } from './IEntityField';
 import { IEntityItem } from './IEntityItem';
@@ -6,11 +6,22 @@ import { IEntityUrls } from './IEntityUrls';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 export declare class SpEntityPortalService {
-    private params;
-    private _web;
-    private _list;
-    private _contentType;
-    constructor(params: ISpEntityPortalServiceParams);
+    private _params;
+    private _portalWeb;
+    private _entityList;
+    private _entityContentType;
+    /**
+     * Constructor
+     *
+     * @param {ISpEntityPortalServiceParams} _params Parameters
+     */
+    constructor(_params: ISpEntityPortalServiceParams);
+    /**
+     * Configure
+     *
+     * @param {SPConfiguration} spConfiguration SP configuration
+     */
+    configure(spConfiguration?: SPConfiguration): SpEntityPortalService;
     /**
      * Get entity item
      *
@@ -53,7 +64,7 @@ export declare class SpEntityPortalService {
         [key: string]: string;
     }): Promise<ItemUpdateResult>;
     /**
-     * New entity
+     * Create new entity
      *
      * @param {string} identity Identity
      * @param {string} url Url
@@ -61,7 +72,7 @@ export declare class SpEntityPortalService {
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    newEntity(identity: string, url: string, additionalProperties?: {
+    createNewEntity(identity: string, url: string, additionalProperties?: {
         [key: string]: any;
     }, permissions?: INewEntityPermissions): Promise<ItemAddResult>;
     /**

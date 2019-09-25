@@ -1,4 +1,4 @@
-import { ContentType, Item, ItemAddResult, ItemUpdateResult, List, Web } from '@pnp/sp';
+import { ContentType, Item, ItemAddResult, ItemUpdateResult, List, Web, sp, SPConfiguration } from '@pnp/sp';
 import { IEntity } from './IEntity';
 import { IEntityField } from './IEntityField';
 import { IEntityItem } from './IEntityItem';
@@ -7,16 +7,29 @@ import { INewEntityPermissions } from './INewEntityPermissions';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 
 export class SpEntityPortalService {
-    private _web: Web;
-    private _list: List;
-    private _contentType: ContentType;
+    private _portalWeb: Web;
+    private _entityList: List;
+    private _entityContentType: ContentType;
 
-    constructor(private params: ISpEntityPortalServiceParams) {
-        this._web = new Web(this.params.webUrl);
-        this._list = this._web.lists.getByTitle(this.params.listName);
-        if (this.params.contentTypeId) {
-            this._contentType = this._web.contentTypes.getById(this.params.contentTypeId);
-        }
+    /**
+     * Constructor
+     * 
+     * @param {ISpEntityPortalServiceParams} _params Parameters
+     */
+    constructor(private _params: ISpEntityPortalServiceParams) {
+        this._portalWeb = new Web(this._params.portalUrl);
+        this._entityList = this._portalWeb.lists.getByTitle(this._params.listName);
+        this._entityContentType = this._params.contentTypeId ? this._portalWeb.contentTypes.getById(this._params.contentTypeId) : null;
+    }
+
+    /**
+     * Configure
+     * 
+     * @param {SPConfiguration} spConfiguration SP configuration
+     */
+    public configure(spConfiguration: SPConfiguration = {}): SpEntityPortalService {
+        sp.setup(spConfiguration);
+        return this;
     }
 
     /**
@@ -41,15 +54,15 @@ export class SpEntityPortalService {
      * Get entity fields 
      */
     public async getEntityFields(): Promise<IEntityField[]> {
-        if (!this._contentType) {
+        if (!this._entityContentType) {
             return [];
         }
         try {
-            let query = this._contentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
-            if (this.params.fieldPrefix) {
-                query = query.filter(`substringof('${this.params.fieldPrefix}', InternalName)`);
+            let query = this._entityContentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
+            if (this._params.fieldPrefix) {
+                query = query.filter(`substringof('${this._params.fieldPrefix}', InternalName)`);
             }
-            return await query.get<IEntityField[]>();
+            return await query.usingCaching().get<IEntityField[]>();
         } catch (e) {
             return [];
         }
@@ -67,8 +80,9 @@ export class SpEntityPortalService {
                 identity = identity.substring(1, 37);
             }
             return (
-                await this._list.items
-                    .filter(`${this.params.identityFieldName} eq '${identity}'`)
+                await this._entityList.items
+                    .filter(`${this._params.identityFieldName} eq '${identity}'`)
+                    .usingCaching()
                     .get()
             )[0];
         } catch (e) {
@@ -83,7 +97,7 @@ export class SpEntityPortalService {
      */
     protected async getEntityItemFieldValues(itemId: number): Promise<{ [key: string]: any }> {
         try {
-            return await this._list.items
+            return await this._entityList.items
                 .getById(itemId)
                 .fieldValuesAsText
                 .get();
@@ -100,12 +114,13 @@ export class SpEntityPortalService {
     */
     protected async getEntityUrls(itemId: number, sourceUrl: string): Promise<IEntityUrls> {
         try {
-            const { Id, DefaultEditFormUrl } = await this._list
+            const { Id, DefaultEditFormUrl } = await this._entityList
                 .select('DefaultEditFormUrl', 'Id')
                 .expand('DefaultEditFormUrl')
+                .usingCaching()
                 .get<{ Id: string, DefaultEditFormUrl: string }>();
             let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`;
-            let versionHistoryUrl = `${this.params.webUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
+            let versionHistoryUrl = `${this._params.portalUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`;
             if (sourceUrl) {
                 editFormUrl += `&Source=${encodeURIComponent(sourceUrl)}`;
                 versionHistoryUrl = `&Source=${encodeURIComponent(sourceUrl)}`;
@@ -125,14 +140,14 @@ export class SpEntityPortalService {
     public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<ItemUpdateResult> {
         try {
             const item = await this.getEntityItem(identity);
-            return await this._list.items.getById(item.Id).update(properties);
+            return await this._entityList.items.getById(item.Id).update(properties);
         } catch (e) {
             throw e;
         }
     }
 
     /**
-     * New entity
+     * Create new entity
      * 
      * @param {string} identity Identity
      * @param {string} url Url
@@ -140,13 +155,13 @@ export class SpEntityPortalService {
      * @param {string} sourceUrl Source URL
      * @param {INewEntityPermissions} permissions Permissions
      */
-    public async newEntity(identity: string, url: string, additionalProperties?: { [key: string]: any }, permissions?: INewEntityPermissions): Promise<ItemAddResult> {
+    public async createNewEntity(identity: string, url: string, additionalProperties?: { [key: string]: any }, permissions?: INewEntityPermissions): Promise<ItemAddResult> {
         try {
-            let properties = { [this.params.identityFieldName]: identity, ...additionalProperties };
-            if (this.params.urlFieldName) {
-                properties[this.params.urlFieldName] = url;
+            let properties = { [this._params.identityFieldName]: identity, ...additionalProperties };
+            if (this._params.urlFieldName) {
+                properties[this._params.urlFieldName] = url;
             }
-            let itemAddResult = await this._list.items.add(properties);
+            let itemAddResult = await this._entityList.items.add(properties);
             if (permissions) {
                 await this.setEntityPermissions(itemAddResult.item, permissions);
             }
@@ -166,18 +181,18 @@ export class SpEntityPortalService {
         await item.breakRoleInheritance(false, true);
         if (fullControlPrincipals) {
             for (let i = 0; i < fullControlPrincipals.length; i++) {
-                let principal = await this._web.ensureUser(fullControlPrincipals[i]);
+                let principal = await this._portalWeb.ensureUser(fullControlPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741829);
             }
         }
         if (readPrincipals) {
             for (let i = 0; i < readPrincipals.length; i++) {
-                let principal = await this._web.ensureUser(readPrincipals[i]);
+                let principal = await this._portalWeb.ensureUser(readPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741826);
             }
         }
         if (addEveryoneRead) {
-            const [everyonePrincipal] = await this._web.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
+            const [everyonePrincipal] = await this._portalWeb.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
             await item.roleAssignments.add(everyonePrincipal.Id, 1073741826);
         }
     }
