@@ -1,11 +1,12 @@
 {
   "name": "sp-entityportal-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "watch": "tsc --watch",
+    "patchVersion": "npm version patch --force",
     "postversion": "tsc --build && npm publish"
   },
   "author": "",
