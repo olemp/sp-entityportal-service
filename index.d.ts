@@ -5,6 +5,7 @@ import { IEntityItem } from './IEntityItem';
 import { IEntityUrls } from './IEntityUrls';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
+import { TypedHash } from '@pnp/common';
 export declare class SpEntityPortalService {
     private _params;
     private _portalWeb;
@@ -60,9 +61,7 @@ export declare class SpEntityPortalService {
      * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    updateEntityItem(identity: string, properties: {
-        [key: string]: string;
-    }): Promise<ItemUpdateResult>;
+    updateEntityItem(identity: string, properties: TypedHash<string>): Promise<ItemUpdateResult>;
     /**
      * Create new entity
      *

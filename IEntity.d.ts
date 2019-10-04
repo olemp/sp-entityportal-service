@@ -1,23 +1,21 @@
 import { IEntityField } from './IEntityField';
-import { IEntityItem } from './IEntityItem';
 import { IEntityUrls } from './IEntityUrls';
+import { TypedHash } from '@pnp/common';
 export interface IEntity {
     /**
-     * @todo Describe property
+     * Item
      */
-    item: IEntityItem;
+    item: TypedHash<any>;
     /**
-     * @todo Describe property
+     * Fields
      */
     fields: IEntityField[];
     /**
-     * @todo Describe property
+     * Urls
      */
     urls: IEntityUrls;
     /**
-     * @todo Describe property
+     * Field values
      */
-    fieldValues: {
-        [key: string]: string;
-    };
+    fieldValues: TypedHash<string>;
 }

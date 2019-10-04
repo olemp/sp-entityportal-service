@@ -1,10 +1,10 @@
 export interface IEntityUrls {
     /**
-     * @todo Describe property
+     * Edit form URL for the entity
      */
     editFormUrl: string;
     /**
-     * @todo Describe property
+     * Version history URL for the entity
      */
     versionHistoryUrl: string;
 }

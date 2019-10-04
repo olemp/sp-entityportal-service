@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var sp_1 = require("@pnp/sp");
+var common_1 = require("@pnp/common");
 var SpEntityPortalService = /** @class */ (function () {
     /**
      * Constructor
@@ -112,8 +113,8 @@ var SpEntityPortalService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        query = this._entityContentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
-                        if (this._params.fieldPrefix) {
+                        query = this._entityContentType.fields.select('Id', 'InternalName', 'Title', 'Description', 'TypeAsString', 'SchemaXml', 'TextField');
+                        if (!common_1.stringIsNullOrEmpty(this._params.fieldPrefix)) {
                             query = query.filter("substringof('" + this._params.fieldPrefix + "', InternalName)");
                         }
                         return [4 /*yield*/, query.usingCaching().get()];

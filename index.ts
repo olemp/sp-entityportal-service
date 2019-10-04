@@ -5,6 +5,7 @@ import { IEntityItem } from './IEntityItem';
 import { IEntityUrls } from './IEntityUrls';
 import { INewEntityPermissions } from './INewEntityPermissions';
 import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
+import { stringIsNullOrEmpty, TypedHash } from '@pnp/common';
 
 export class SpEntityPortalService {
     private _portalWeb: Web;
@@ -58,8 +59,8 @@ export class SpEntityPortalService {
             return [];
         }
         try {
-            let query = this._entityContentType.fields.select('Id', 'InternalName', 'Title', 'TypeAsString', 'SchemaXml', 'TextField');
-            if (this._params.fieldPrefix) {
+            let query = this._entityContentType.fields.select('Id', 'InternalName', 'Title', 'Description', 'TypeAsString', 'SchemaXml', 'TextField');
+            if (!stringIsNullOrEmpty(this._params.fieldPrefix)) {
                 query = query.filter(`substringof('${this._params.fieldPrefix}', InternalName)`);
             }
             return await query.usingCaching().get<IEntityField[]>();
@@ -137,7 +138,7 @@ export class SpEntityPortalService {
      * @param {string} identity Identity
      * @param {Object} properties Properties
      */
-    public async updateEntityItem(identity: string, properties: { [key: string]: string }): Promise<ItemUpdateResult> {
+    public async updateEntityItem(identity: string, properties: TypedHash<string>): Promise<ItemUpdateResult> {
         try {
             const item = await this.getEntityItem(identity);
             return await this._entityList.items.getById(item.Id).update(properties);
