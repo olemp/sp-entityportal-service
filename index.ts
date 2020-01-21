@@ -8,7 +8,7 @@ import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { stringIsNullOrEmpty, TypedHash } from '@pnp/common';
 
 export class SpEntityPortalService {
-    private _portalWeb: Web;
+    public web: Web;
     private _entityList: List;
     private _entityContentType: ContentType;
 
@@ -18,9 +18,9 @@ export class SpEntityPortalService {
      * @param {ISpEntityPortalServiceParams} _params Parameters
      */
     constructor(private _params: ISpEntityPortalServiceParams) {
-        this._portalWeb = new Web(this._params.portalUrl);
-        this._entityList = this._portalWeb.lists.getByTitle(this._params.listName);
-        this._entityContentType = this._params.contentTypeId ? this._portalWeb.contentTypes.getById(this._params.contentTypeId) : null;
+        this.web = new Web(this._params.portalUrl);
+        this._entityList = this.web.lists.getByTitle(this._params.listName);
+        this._entityContentType = this._params.contentTypeId ? this.web.contentTypes.getById(this._params.contentTypeId) : null;
     }
 
     /**
@@ -31,6 +31,15 @@ export class SpEntityPortalService {
     public configure(spConfiguration: SPConfiguration = {}): SpEntityPortalService {
         sp.setup(spConfiguration);
         return this;
+    }
+
+    /**
+     * Returns a new instance of the SpEntityPortalService using the specified params
+     * 
+     * @param {ISpEntityPortalServiceParams} params Params
+     */
+    public usingParams(params: ISpEntityPortalServiceParams) {
+        return new SpEntityPortalService({ ...this._params, ...params });
     }
 
     /**
@@ -182,18 +191,18 @@ export class SpEntityPortalService {
         await item.breakRoleInheritance(false, true);
         if (fullControlPrincipals) {
             for (let i = 0; i < fullControlPrincipals.length; i++) {
-                let principal = await this._portalWeb.ensureUser(fullControlPrincipals[i]);
+                let principal = await this.web.ensureUser(fullControlPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741829);
             }
         }
         if (readPrincipals) {
             for (let i = 0; i < readPrincipals.length; i++) {
-                let principal = await this._portalWeb.ensureUser(readPrincipals[i]);
+                let principal = await this.web.ensureUser(readPrincipals[i]);
                 await item.roleAssignments.add(principal.data.Id, 1073741826);
             }
         }
         if (addEveryoneRead) {
-            const [everyonePrincipal] = await this._portalWeb.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
+            const [everyonePrincipal] = await this.web.siteUsers.filter(`substringof('spo-grid-all-user', LoginName)`).select('Id').get<Array<{ Id: number }>>();
             await item.roleAssignments.add(everyonePrincipal.Id, 1073741826);
         }
     }

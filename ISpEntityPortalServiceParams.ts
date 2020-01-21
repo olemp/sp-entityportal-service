@@ -2,17 +2,17 @@ export interface ISpEntityPortalServiceParams {
     /**
      * Portal URL
      */
-    portalUrl: string;
+    portalUrl?: string;
 
     /**
      * List name for the entities
      */
-    listName: string;
+    listName?: string;
 
     /**
      * Field name that indentifies the entity
      */
-    identityFieldName: string;
+    identityFieldName?: string;
 
     /**
      * Field name for site url

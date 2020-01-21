@@ -56,9 +56,9 @@ var SpEntityPortalService = /** @class */ (function () {
      */
     function SpEntityPortalService(_params) {
         this._params = _params;
-        this._portalWeb = new sp_1.Web(this._params.portalUrl);
-        this._entityList = this._portalWeb.lists.getByTitle(this._params.listName);
-        this._entityContentType = this._params.contentTypeId ? this._portalWeb.contentTypes.getById(this._params.contentTypeId) : null;
+        this.web = new sp_1.Web(this._params.portalUrl);
+        this._entityList = this.web.lists.getByTitle(this._params.listName);
+        this._entityContentType = this._params.contentTypeId ? this.web.contentTypes.getById(this._params.contentTypeId) : null;
     }
     /**
      * Configure
@@ -69,6 +69,14 @@ var SpEntityPortalService = /** @class */ (function () {
         if (spConfiguration === void 0) { spConfiguration = {}; }
         sp_1.sp.setup(spConfiguration);
         return this;
+    };
+    /**
+     * Returns a new instance of the SpEntityPortalService using the specified params
+     *
+     * @param {ISpEntityPortalServiceParams} params Params
+     */
+    SpEntityPortalService.prototype.usingParams = function (params) {
+        return new SpEntityPortalService(__assign({}, this._params, params));
     };
     /**
      * Get entity item
@@ -298,7 +306,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         _b.label = 2;
                     case 2:
                         if (!(i < fullControlPrincipals.length)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this._portalWeb.ensureUser(fullControlPrincipals[i])];
+                        return [4 /*yield*/, this.web.ensureUser(fullControlPrincipals[i])];
                     case 3:
                         principal = _b.sent();
                         return [4 /*yield*/, item.roleAssignments.add(principal.data.Id, 1073741829)];
@@ -314,7 +322,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         _b.label = 7;
                     case 7:
                         if (!(i < readPrincipals.length)) return [3 /*break*/, 11];
-                        return [4 /*yield*/, this._portalWeb.ensureUser(readPrincipals[i])];
+                        return [4 /*yield*/, this.web.ensureUser(readPrincipals[i])];
                     case 8:
                         principal = _b.sent();
                         return [4 /*yield*/, item.roleAssignments.add(principal.data.Id, 1073741826)];
@@ -326,7 +334,7 @@ var SpEntityPortalService = /** @class */ (function () {
                         return [3 /*break*/, 7];
                     case 11:
                         if (!addEveryoneRead) return [3 /*break*/, 14];
-                        return [4 /*yield*/, this._portalWeb.siteUsers.filter("substringof('spo-grid-all-user', LoginName)").select('Id').get()];
+                        return [4 /*yield*/, this.web.siteUsers.filter("substringof('spo-grid-all-user', LoginName)").select('Id').get()];
                     case 12:
                         everyonePrincipal = (_b.sent())[0];
                         return [4 /*yield*/, item.roleAssignments.add(everyonePrincipal.Id, 1073741826)];

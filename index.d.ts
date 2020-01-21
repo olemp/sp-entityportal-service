@@ -1,4 +1,4 @@
-import { ItemAddResult, ItemUpdateResult, SPConfiguration } from '@pnp/sp';
+import { ItemAddResult, ItemUpdateResult, Web, SPConfiguration } from '@pnp/sp';
 import { IEntity } from './IEntity';
 import { IEntityField } from './IEntityField';
 import { IEntityItem } from './IEntityItem';
@@ -8,7 +8,7 @@ import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { TypedHash } from '@pnp/common';
 export declare class SpEntityPortalService {
     private _params;
-    private _portalWeb;
+    web: Web;
     private _entityList;
     private _entityContentType;
     /**
@@ -23,6 +23,12 @@ export declare class SpEntityPortalService {
      * @param {SPConfiguration} spConfiguration SP configuration
      */
     configure(spConfiguration?: SPConfiguration): SpEntityPortalService;
+    /**
+     * Returns a new instance of the SpEntityPortalService using the specified params
+     *
+     * @param {ISpEntityPortalServiceParams} params Params
+     */
+    usingParams(params: ISpEntityPortalServiceParams): SpEntityPortalService;
     /**
      * Get entity item
      *
