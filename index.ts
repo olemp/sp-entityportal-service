@@ -1,11 +1,6 @@
-import { ContentType, Item, ItemAddResult, ItemUpdateResult, List, Web, sp, SPConfiguration } from '@pnp/sp';
-import { IEntity } from './IEntity';
-import { IEntityField } from './IEntityField';
-import { IEntityItem } from './IEntityItem';
-import { IEntityUrls } from './IEntityUrls';
-import { INewEntityPermissions } from './INewEntityPermissions';
-import { ISpEntityPortalServiceParams } from './ISpEntityPortalServiceParams';
 import { stringIsNullOrEmpty, TypedHash } from '@pnp/common';
+import { ContentType, Item, ItemAddResult, ItemUpdateResult, List, sp, SPConfiguration, Web } from '@pnp/sp';
+import { IEntity, IEntityField, IEntityUrls, INewEntityPermissions, ISpEntityPortalServiceParams } from './types';
 
 export class SpEntityPortalService {
     public web: Web;
@@ -84,7 +79,7 @@ export class SpEntityPortalService {
      * 
      * @param {string} identity Identity
      */
-    public async getEntityItem(identity: string): Promise<IEntityItem> {
+    public async getEntityItem<T = any>(identity: string): Promise<T> {
         try {
             if (identity.length === 38) {
                 identity = identity.substring(1, 37);
@@ -208,4 +203,4 @@ export class SpEntityPortalService {
     }
 }
 
-export { ISpEntityPortalServiceParams, IEntityField, IEntityItem, IEntity, IEntityUrls };
+export { ISpEntityPortalServiceParams, IEntityField, IEntity, IEntityUrls };
