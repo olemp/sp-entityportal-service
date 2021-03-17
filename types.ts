@@ -23,14 +23,14 @@ export interface IEntity {
 }
 
 export interface IEntityField {
-  Id: string
-  Title: string
-  Description: string
-  InternalName: string
-  TypeAsString: string
-  TextField: string
-  SchemaXml: string
-  Group: string
+  Id?: string
+  Title?: string
+  Description?: string
+  InternalName?: string
+  TypeAsString?: string
+  TextField?: string
+  SchemaXml?: string
+  Group?: string
 }
 
 export interface IEntityUrls {
