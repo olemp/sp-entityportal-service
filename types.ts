@@ -1,10 +1,10 @@
-import { TypedHash } from '@pnp/common'
+import { ITypedHash } from '@pnp/common'
 
 export interface IEntity {
   /**
    * Item
    */
-  item: TypedHash<any>
+  item: ITypedHash<any>
 
   /**
    * Fields
@@ -19,7 +19,7 @@ export interface IEntity {
   /**
    * Field values
    */
-  fieldValues: TypedHash<string>
+  fieldValues: ITypedHash<string>
 }
 
 export interface IEntityField {

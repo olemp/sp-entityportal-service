@@ -1,14 +1,15 @@
-import { stringIsNullOrEmpty, TypedHash } from '@pnp/common'
+import { ITypedHash, stringIsNullOrEmpty } from '@pnp/common'
 import {
-  ContentType,
-  Item,
-  ItemAddResult,
-  ItemUpdateResult,
-  List,
+  IContentType,
+  IItem,
+  IItemAddResult,
+  IItemUpdateResult,
+  IList,
+  ISPConfiguration,
+  IWeb,
   sp,
-  SPConfiguration,
   Web
-} from '@pnp/sp'
+} from '@pnp/sp/presets/all'
 import {
   IEntity,
   IEntityField,
@@ -18,17 +19,17 @@ import {
 } from './types'
 
 export class SpEntityPortalService {
-  public web: Web
-  private _entityList: List
-  private _entityContentType: ContentType
+  public web: IWeb
+  private _entityList: IList
+  private _entityContentType: IContentType
 
   /**
-   * Constructor
+   * Construct a new `SpEntityPortalService` instance
    *
-   * @param {ISpEntityPortalServiceParams} _params Parameters
+   * @param _params - Parameters
    */
   constructor(private _params: ISpEntityPortalServiceParams) {
-    this.web = new Web(this._params.portalUrl)
+    this.web = Web(this._params.portalUrl)
     this._entityList = this.web.lists.getByTitle(this._params.listName)
     this._entityContentType = this._params.contentTypeId
       ? this.web.contentTypes.getById(this._params.contentTypeId)
@@ -38,9 +39,9 @@ export class SpEntityPortalService {
   /**
    * Configure
    *
-   * @param {SPConfiguration} spConfiguration SP configuration
+   * @param spConfiguration - SP configuration
    */
-  public configure(spConfiguration: SPConfiguration = {}): SpEntityPortalService {
+  public configure(spConfiguration: ISPConfiguration = {}): SpEntityPortalService {
     sp.setup(spConfiguration)
     return this
   }
@@ -48,7 +49,7 @@ export class SpEntityPortalService {
   /**
    * Returns a new instance of the SpEntityPortalService using the specified params
    *
-   * @param {ISpEntityPortalServiceParams} params Params
+   * @param params - Params
    */
   public usingParams(params: ISpEntityPortalServiceParams) {
     return new SpEntityPortalService({ ...this._params, ...params })
@@ -57,8 +58,8 @@ export class SpEntityPortalService {
   /**
    * Get entity item
    *
-   * @param {string} identity Identity
-   * @param {string} sourceUrl Source URL used to generate URLs
+   * @param identity - Identity
+   * @param sourceUrl - Source URL used to generate URLs
    */
   public async fetchEntity(identity: string, sourceUrl: string): Promise<IEntity> {
     let [item, fields] = await Promise.all([this.getEntityItem(identity), this.getEntityFields()])
@@ -99,7 +100,7 @@ export class SpEntityPortalService {
   /**
    * Get entity item
    *
-   * @param {string} identity Identity
+   * @param identity - Identity
    */
   public async getEntityItem<T = any>(identity: string): Promise<T> {
     try {
@@ -120,7 +121,7 @@ export class SpEntityPortalService {
   /**
    * Get entity item field values
    *
-   * @param {number} itemId Item id
+   * @param itemId - Item ID
    */
   protected async getEntityItemFieldValues(itemId: number): Promise<{ [key: string]: any }> {
     try {
@@ -163,8 +164,8 @@ export class SpEntityPortalService {
    */
   public async updateEntityItem(
     identity: string,
-    properties: TypedHash<string>
-  ): Promise<ItemUpdateResult> {
+    properties: ITypedHash<string>
+  ): Promise<IItemUpdateResult> {
     try {
       const item = await this.getEntityItem(identity)
       return await this._entityList.items.getById(item.Id).update(properties)
@@ -187,7 +188,7 @@ export class SpEntityPortalService {
     url: string,
     additionalProperties?: { [key: string]: any },
     permissions?: INewEntityPermissions
-  ): Promise<ItemAddResult> {
+  ): Promise<IItemAddResult> {
     try {
       let properties = { [this._params.identityFieldName]: identity, ...additionalProperties }
       if (this._params.urlFieldName) {
@@ -210,7 +211,7 @@ export class SpEntityPortalService {
    * @param {INewEntityPermissions} permissions Permissions
    */
   private async setEntityPermissions(
-    item: Item,
+    item: IItem,
     { fullControlPrincipals, readPrincipals, addEveryoneRead }: INewEntityPermissions
   ) {
     await item.breakRoleInheritance(false, true)
