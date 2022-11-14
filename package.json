@@ -1,6 +1,6 @@
 {
   "name": "sp-entityportal-service",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -14,13 +14,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@microsoft/sp-page-context": "1.11.0",
-    "@pnp/common": "2.7.0",
-    "@pnp/sp": "2.7.0"
+    "@microsoft/sp-page-context": "1.15.2",
+    "@pnp/core": "3.9.0",
+    "@pnp/logging": "^3.9.0",
+    "@pnp/sp": "3.9.0"
   },
   "devDependencies": {
     "prettier": "2.2.1",
-    "typescript": "3.3.4000"
+    "typescript": "4.5.5"
   },
   "prettier": {
     "tabWidth": 2,

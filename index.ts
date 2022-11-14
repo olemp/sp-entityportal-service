@@ -1,15 +1,10 @@
-import { ITypedHash, stringIsNullOrEmpty } from '@pnp/common'
-import {
-  IContentType,
-  IItem,
-  IItemAddResult,
-  IItemUpdateResult,
-  IList,
-  ISPConfiguration,
-  IWeb,
-  sp,
-  Web
-} from '@pnp/sp/presets/all'
+import { stringIsNullOrEmpty } from '@pnp/core'
+import { spfi, SPFI, SPFx } from '@pnp/sp'
+import { IContentType } from '@pnp/sp/content-types'
+import { IItem, IItemAddResult, IItemUpdateResult } from '@pnp/sp/items'
+import { IList } from '@pnp/sp/lists'
+import '@pnp/sp/webs'
+import '@pnp/sp/site-users'
 import {
   IEntity,
   IEntityField,
@@ -19,7 +14,7 @@ import {
 } from './types'
 
 export class SpEntityPortalService {
-  public web: IWeb
+  public sp: SPFI
   private _entityList: IList
   private _entityContentType: IContentType
 
@@ -29,23 +24,12 @@ export class SpEntityPortalService {
    * @param _params - Parameters
    */
   constructor(private _params: ISpEntityPortalServiceParams) {
-    this.web = Web(this._params.portalUrl)
-    this._entityList = this.web.lists.getByTitle(this._params.listName)
+    this.sp = spfi(_params.portalUrl).using(SPFx(_params.spfxContext))
+    this._entityList = this.sp.web.lists.getByTitle(this._params.listName)
     this._entityContentType = this._params.contentTypeId
-      ? this.web.contentTypes.getById(this._params.contentTypeId)
+      ? this.sp.web.contentTypes.getById(this._params.contentTypeId)
       : null
   }
-
-  /**
-   * Configure
-   *
-   * @param spConfiguration - SP configuration
-   */
-  public configure(spConfiguration: ISPConfiguration = {}): SpEntityPortalService {
-    sp.setup(spConfiguration)
-    return this
-  }
-
   /**
    * Returns a new instance of the SpEntityPortalService using the specified params
    *
@@ -91,7 +75,7 @@ export class SpEntityPortalService {
       if (!stringIsNullOrEmpty(this._params.fieldPrefix)) {
         query = query.filter(`substringof('${this._params.fieldPrefix}', InternalName)`)
       }
-      return await query.usingCaching().get<IEntityField[]>()
+      return await query<IEntityField[]>()
     } catch (e) {
       return []
     }
@@ -108,10 +92,7 @@ export class SpEntityPortalService {
         identity = identity.substring(1, 37)
       }
       return (
-        await this._entityList.items
-          .filter(`${this._params.identityFieldName} eq '${identity}'`)
-          .usingCaching()
-          .get()
+        await this._entityList.items.filter(`${this._params.identityFieldName} eq '${identity}'`)()
       )[0]
     } catch (e) {
       throw e
@@ -125,7 +106,7 @@ export class SpEntityPortalService {
    */
   protected async getEntityItemFieldValues(itemId: number): Promise<{ [key: string]: any }> {
     try {
-      return await this._entityList.items.getById(itemId).fieldValuesAsText.get()
+      return await this._entityList.items.getById(itemId).fieldValuesAsText()
     } catch (e) {
       throw e
     }
@@ -141,9 +122,7 @@ export class SpEntityPortalService {
     try {
       const { Id, DefaultEditFormUrl } = await this._entityList
         .select('DefaultEditFormUrl', 'Id')
-        .expand('DefaultEditFormUrl')
-        .usingCaching()
-        .get<{ Id: string; DefaultEditFormUrl: string }>()
+        .expand('DefaultEditFormUrl')<{ Id: string; DefaultEditFormUrl: string }>()
       let editFormUrl = `${window.location.protocol}//${window.location.hostname}${DefaultEditFormUrl}?ID=${itemId}`
       let versionHistoryUrl = `${this._params.portalUrl}/_layouts/15/versions.aspx?list=${Id}&ID=${itemId}`
       if (sourceUrl) {
@@ -164,7 +143,7 @@ export class SpEntityPortalService {
    */
   public async updateEntityItem(
     identity: string,
-    properties: ITypedHash<string>
+    properties: Record<string, string>
   ): Promise<IItemUpdateResult> {
     try {
       const item = await this.getEntityItem(identity)
@@ -217,21 +196,20 @@ export class SpEntityPortalService {
     await item.breakRoleInheritance(false, true)
     if (fullControlPrincipals) {
       for (let i = 0; i < fullControlPrincipals.length; i++) {
-        let principal = await this.web.ensureUser(fullControlPrincipals[i])
+        let principal = await this.sp.web.ensureUser(fullControlPrincipals[i])
         await item.roleAssignments.add(principal.data.Id, 1073741829)
       }
     }
     if (readPrincipals) {
       for (let i = 0; i < readPrincipals.length; i++) {
-        let principal = await this.web.ensureUser(readPrincipals[i])
+        let principal = await this.sp.web.ensureUser(readPrincipals[i])
         await item.roleAssignments.add(principal.data.Id, 1073741826)
       }
     }
     if (addEveryoneRead) {
-      const [everyonePrincipal] = await this.web.siteUsers
+      const [everyonePrincipal] = await this.sp.web.siteUsers
         .filter(`substringof('spo-grid-all-user', LoginName)`)
-        .select('Id')
-        .get<Array<{ Id: number }>>()
+        .select('Id')<{ Id: number }[]>()
       await item.roleAssignments.add(everyonePrincipal.Id, 1073741826)
     }
   }

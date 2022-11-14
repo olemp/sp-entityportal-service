@@ -1,10 +1,8 @@
-import { ITypedHash } from '@pnp/common'
-
 export interface IEntity {
   /**
    * Item
    */
-  item: ITypedHash<any>
+  item: Record<string, any>
 
   /**
    * Fields
@@ -19,7 +17,7 @@ export interface IEntity {
   /**
    * Field values
    */
-  fieldValues: ITypedHash<string>
+  fieldValues: Record<string, string>
 }
 
 export interface IEntityField {
@@ -63,6 +61,11 @@ export interface INewEntityPermissions {
 }
 
 export interface ISpEntityPortalServiceParams {
+  /**
+   * SPFx context
+   */
+  spfxContext: any
+
   /**
    * Portal URL
    */
