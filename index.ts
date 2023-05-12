@@ -115,8 +115,8 @@ export class SpEntityPortalService {
   /**
    * Get entity urls
    *
-   * @param {number} itemId Item id
-   * @param {string} sourceUrl Source URL
+   * @param itemId Item id
+   * @param sourceUrl Source URL
    */
   protected async getEntityUrls(itemId: number, sourceUrl: string): Promise<IEntityUrls> {
     try {
@@ -138,8 +138,8 @@ export class SpEntityPortalService {
   /**
    * Update enity item
    *
-   * @param {string} identity Identity
-   * @param {Object} properties Properties
+   * @param identity Identity
+   * @param properties Properties
    */
   public async updateEntityItem(
     identity: string,
@@ -156,11 +156,10 @@ export class SpEntityPortalService {
   /**
    * Create new entity
    *
-   * @param {string} identity Identity
-   * @param {string} url Url
-   * @param {Object} additionalProperties Additional properties
-   * @param {string} sourceUrl Source URL
-   * @param {INewEntityPermissions} permissions Permissions
+   * @param identity Identity
+   * @param url Url
+   * @param additionalProperties Additional properties
+   * @param permissions Permissions
    */
   public async createNewEntity(
     identity: string,
@@ -184,10 +183,34 @@ export class SpEntityPortalService {
   }
 
   /**
+   * Ensure entity exists with the specified `identity`. If it doesn't exist, it will be created.
+   *
+   * @param identity Identity
+   * @param url URL of the entity
+   * @param properties Properties
+   * @returns
+   */
+  public async ensureEntity(
+    identity: string,
+    url: string,
+    properties: Record<string, string>
+  ): Promise<IItemAddResult | IItemUpdateResult> {
+    try {
+      let item = await this.getEntityItem(identity)
+      if (!item) {
+        return await this.createNewEntity(identity, url, properties)
+      }
+      return await this._entityList.items.getById(item.Id).update(properties)
+    } catch (e) {
+      throw e
+    }
+  }
+
+  /**
    * Set entity permissions
    *
-   * @param {Item} item Item/entity
-   * @param {INewEntityPermissions} permissions Permissions
+   * @param item Item/entity
+   * @param permissions Permissions
    */
   private async setEntityPermissions(
     item: IItem,
