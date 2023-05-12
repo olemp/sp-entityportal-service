@@ -64,7 +64,7 @@ export interface ISpEntityPortalServiceParams {
   /**
    * SPFx context
    */
-  spfxContext: any
+  spfxContext?: any
 
   /**
    * Portal URL

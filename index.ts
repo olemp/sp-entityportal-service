@@ -30,6 +30,7 @@ export class SpEntityPortalService {
       ? this.sp.web.contentTypes.getById(this._params.contentTypeId)
       : null
   }
+
   /**
    * Returns a new instance of the SpEntityPortalService using the specified params
    *
