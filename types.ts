@@ -64,32 +64,32 @@ export interface ISpEntityPortalServiceParams {
   /**
    * SPFx context
    */
-  spfxContext?: any
+  spfxContext: any
 
   /**
    * Portal URL
    */
-  portalUrl?: string
-
-  /**
-   * List name for the entities
-   */
-  listName?: string
-
-  /**
-   * Field name that indentifies the entity
-   */
-  identityFieldName?: string
-
-  /**
-   * Field name for site url
-   */
-  urlFieldName?: string
+  portalUrl: string
 
   /**
    * Content type ID for entity
    */
-  contentTypeId?: string
+  contentTypeId: string
+
+  /**
+   * List name for the entities
+   */
+  listName: string
+
+  /**
+   * Field name that indentifies the entity
+   */
+  identityFieldName: string
+
+  /**
+   * Field name for site url
+   */
+  urlFieldName: string
 
   /**
    * Field prefix for entity fields

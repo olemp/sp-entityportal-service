@@ -28,7 +28,7 @@ export class SpEntityPortalService {
   constructor(private _params: ISpEntityPortalServiceParams) {
     this.sp = spfi(_params.portalUrl).using(SPFx(_params.spfxContext))
     this.web = this.sp.web
-    this._entityList = this.sp.web.lists.getByTitle(this._params.listName)
+    this._entityList = this.web.lists.getByTitle(this._params.listName)
     this._entityContentType = this._params.contentTypeId
       ? this.sp.web.contentTypes.getById(this._params.contentTypeId)
       : null
