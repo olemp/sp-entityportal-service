@@ -1,179 +1,292 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
-  '@microsoft/sp-page-context': 1.9.1
-  '@pnp/common': 1.3.6
-  '@pnp/logging': 1.3.6
-  '@pnp/odata': 1.3.6_6795127a97b2dcfc80caadca5f95a675
-  '@pnp/sp': 1.3.6_ce6f99bf485505b6b53ec3a222a696d5
-lockfileVersion: 5.1
+  '@microsoft/sp-page-context':
+    specifier: 1.15.2
+    version: 1.15.2
+  '@pnp/core':
+    specifier: 3.9.0
+    version: 3.9.0
+  '@pnp/logging':
+    specifier: ^3.9.0
+    version: 3.17.0
+  '@pnp/sp':
+    specifier: 3.9.0
+    version: 3.9.0
+
+devDependencies:
+  prettier:
+    specifier: 2.2.1
+    version: 2.2.1
+  typescript:
+    specifier: 4.5.5
+    version: 4.5.5
+
 packages:
-  /@microsoft/sp-core-library/1.9.1:
+
+  /@microsoft/sp-core-library@1.15.2:
+    resolution: {integrity: sha512-sEotaC8+jUMZa5wc3lvtDYOGpAzzcl1fSZ0FnANIrJGyBC6tTqred0fzpkXptd4R0G/wi3746ivrccAOkzONkQ==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      '@microsoft/sp-lodash-subset': 1.9.1
-      '@microsoft/sp-module-interfaces': 1.9.1
-      '@types/es6-promise': 0.0.33
-      '@types/webpack-env': 1.13.1
+      '@microsoft/sp-lodash-subset': 1.15.2
+      '@microsoft/sp-module-interfaces': 1.15.2
+      '@microsoft/sp-odata-types': 1.15.2
+      tslib: 2.3.1
     dev: false
-    resolution:
-      integrity: sha512-mXmrZhyuA0NymTAC6HSUiMGFLni9OSlKfJGWKt02EyuFbQ3U4v4UnmvZgvnQZs9ZHBc7KrKInxRaYCjHrv2ITg==
-  /@microsoft/sp-diagnostics/1.9.1:
+
+  /@microsoft/sp-diagnostics@1.15.2:
+    resolution: {integrity: sha512-9OJQwkdy3kqATQISpI4SG+5OUMB90KesupsWIE31aAyPcQiilh0XGhWmaYnCxCgGATAWcaYrFeptlDOTQNpuiA==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      '@microsoft/sp-core-library': 1.9.1
-      '@microsoft/sp-lodash-subset': 1.9.1
+      '@microsoft/sp-core-library': 1.15.2
+      '@microsoft/sp-lodash-subset': 1.15.2
     dev: false
-    resolution:
-      integrity: sha512-Ggnszpej/zPfCeGCwzBg/pFvsNxq4/cGDc0J3cGQJknAv/5cldSefT6SqPDD7qELpXw/sTfq+Zy5pyGxQDvcVw==
-  /@microsoft/sp-dynamic-data/1.9.1:
+
+  /@microsoft/sp-dynamic-data@1.15.2:
+    resolution: {integrity: sha512-6ks5GUBSatsijQC8NUjaLjYCv4efAbEJcbSVTj8lySpTVCWu8aKsFtKB1b/Vc3I1g9Adq6z2e9sgTaPwm6HTlA==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      '@microsoft/sp-core-library': 1.9.1
-      '@microsoft/sp-diagnostics': 1.9.1
-      '@microsoft/sp-lodash-subset': 1.9.1
-      '@microsoft/sp-module-interfaces': 1.9.1
-      '@types/webpack-env': 1.13.1
-      tslib: 1.9.3
+      '@microsoft/sp-core-library': 1.15.2
+      '@microsoft/sp-diagnostics': 1.15.2
+      '@microsoft/sp-lodash-subset': 1.15.2
+      '@microsoft/sp-module-interfaces': 1.15.2
+      tslib: 2.3.1
     dev: false
-    resolution:
-      integrity: sha512-NVHhesEQ/qUpJOr54SMJtIrRdVs+dJVT9eSo4ntsJF1N2o23FMvH7IHLym9e+tGK0XqA6c/f3SWq+ujVRDfLMQ==
-  /@microsoft/sp-lodash-subset/1.9.1:
+
+  /@microsoft/sp-lodash-subset@1.15.2:
+    resolution: {integrity: sha512-XLqSltvz9W0hft76fylqVFNUIVS1sLjdUF3+lIQyj0g+4R9kDy9VsGhpxX7qLGAdW10yZ6Z40qfmBWgn8NN4MA==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
       '@types/lodash': 4.14.117
-      '@types/webpack-env': 1.13.1
-      tslib: 1.9.3
+      tslib: 2.3.1
     dev: false
-    resolution:
-      integrity: sha512-bHYp2vyKfB/TYmCClUw9SCvJ7EYGeJOx8bxIm1hBlYzNBtIQvotTfdFBNz6vYEAXczMQHZkO9vToEd5jSturEA==
-  /@microsoft/sp-module-interfaces/1.9.1:
+
+  /@microsoft/sp-module-interfaces@1.15.2:
+    resolution: {integrity: sha512-JGOjK8f5ww+r4ax8TBAPDyZhDhGWVg1Jk4PvKE0cU6qjywM0DzWWkzHJFcyFXdjr8UE/+wzJOKasCCtu1RjWQg==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      '@types/node': 8.5.8
-      '@types/z-schema': 3.16.31
-      z-schema: 3.18.4
+      '@rushstack/node-core-library': 3.45.5
+      z-schema: 4.2.4
     dev: false
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha512-c9ihRbxq3zOv1hU76BNFlB1i2ZOTidgPmoz5BRHogSarcTC6NxnB+4pP8ulSvvV5NiNZLFZrNNF5WXg1wbGIqA==
-  /@microsoft/sp-odata-types/1.9.1:
+
+  /@microsoft/sp-odata-types@1.15.2:
+    resolution: {integrity: sha512-Eb5MAWRAOkRAGXSdacg8p/KdSpYDJBNwyqNCZwrsCbgf/66h28oK0KUqQ6o8Hcy+vAZpa16x6bvpJQw5u1u8ZA==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      tslib: 1.9.3
+      tslib: 2.3.1
     dev: false
-    resolution:
-      integrity: sha512-Gy3Ke4MQv1gQxhAlAgp9aWZ9R3nCKr7uZ67186BZit0sSqFmmv3XWGUMS3DCKQo3+piQWCoZPU8XvmyBmAo9+w==
-  /@microsoft/sp-page-context/1.9.1:
+
+  /@microsoft/sp-page-context@1.15.2:
+    resolution: {integrity: sha512-gq7q2vq5rzAwkOn4/jpdL/VgHCrtDWNZqjcU62W6iIW4TNT3nVykcof9llpghPcYx5dOuTtrRizXfa+vtQ+rzw==}
+    engines: {node: '>=12.13.0 <13.0.0 || >=14.15.0 <15.0.0 || >=16.13.0 <17.0.0'}
     dependencies:
-      '@microsoft/sp-core-library': 1.9.1
-      '@microsoft/sp-diagnostics': 1.9.1
-      '@microsoft/sp-dynamic-data': 1.9.1
-      '@microsoft/sp-lodash-subset': 1.9.1
-      '@microsoft/sp-odata-types': 1.9.1
-      '@types/es6-promise': 0.0.33
-      '@types/webpack-env': 1.13.1
-      tslib: 1.9.3
+      '@microsoft/sp-core-library': 1.15.2
+      '@microsoft/sp-diagnostics': 1.15.2
+      '@microsoft/sp-dynamic-data': 1.15.2
+      '@microsoft/sp-lodash-subset': 1.15.2
+      '@microsoft/sp-odata-types': 1.15.2
+      tslib: 2.3.1
     dev: false
-    resolution:
-      integrity: sha512-eFFbUxcGhjtS4CD57fzphNDqRgLbY2SHY9zsjfDYRiiAqOxrKGC2XklLbS6zCEb4xXOCZAPyPDHYmR8tLRAE2g==
-  /@pnp/common/1.3.6:
+
+  /@pnp/core@3.9.0:
+    resolution: {integrity: sha512-EzuU6jD2qGEARkcBsSf3RM2Q+tZ6WwQc/Dd/klKO23eYV9M4fQnUFKtmVDAyE+pfJTot3bN3vXVny6llAdNxjg==}
+    engines: {node: '>=14.15.1'}
     dependencies:
-      adal-angular: 1.0.17
-      tslib: 1.10.0
+      tslib: 2.4.0
     dev: false
-    resolution:
-      integrity: sha512-o81CC685vdcwTbLkNe89y2pc3xqyq0dMqhI5F0dJhZE0D7NNhyYAPhVjpS+yRLwALDgMTMpkghKAOCrtHGXcOw==
-  /@pnp/logging/1.3.6:
+
+  /@pnp/logging@3.17.0:
+    resolution: {integrity: sha512-AdsPdecbzvvNrm4DzSrgzRXyMkF87PZ+XBaZotXLw4r4NQZFTKfB9agEO5aSfjOCaBbbij81m3D0ZGo4gGvzqg==}
+    engines: {node: '>=14.15.1'}
     dependencies:
-      tslib: 1.10.0
+      tslib: 2.4.1
     dev: false
-    resolution:
-      integrity: sha512-LM/WYAd4YjhBub4C6PkNKc1r1F+lqr6lSTYokTOg4srJsvcyhXiJ++cB80YrOEqDvifbzR9WZWWm480+IzD9cA==
-  /@pnp/odata/1.3.6_6795127a97b2dcfc80caadca5f95a675:
+
+  /@pnp/queryable@3.9.0:
+    resolution: {integrity: sha512-05n4BLKd1Tjbb5piQyvEtcUse13CQf9hfLwFj8sLb33stFX48QzKBW8ZGbk57MfH6Wkj4SPSHbYg9vZd2+UZZQ==}
+    engines: {node: '>=14.15.1'}
     dependencies:
-      '@pnp/common': 1.3.6
-      '@pnp/logging': 1.3.6
-      tslib: 1.10.0
+      '@pnp/core': 3.9.0
+      tslib: 2.4.0
     dev: false
-    peerDependencies:
-      '@pnp/common': 1.3.6
-      '@pnp/logging': 1.3.6
-    resolution:
-      integrity: sha512-5WM8GQQ3C+wOzBXFcEZKZM9P1G4tWu+aL0CXuk6tTSs8rojs73hXB7QyOWA+HSF72iXyBdPaaaJ47js9Q+nD1g==
-  /@pnp/sp/1.3.6_ce6f99bf485505b6b53ec3a222a696d5:
+
+  /@pnp/sp@3.9.0:
+    resolution: {integrity: sha512-AHDZe/e0kIzOHu7FIrYsjWqzxY31sSo2NV9Jdo8wHDGV5YF1+9GRHxC2M4tTFIw9Hn6gZv2RyhnqHJhBFw9owg==}
+    engines: {node: '>=14.15.1'}
+    requiresBuild: true
     dependencies:
-      '@pnp/common': 1.3.6
-      '@pnp/logging': 1.3.6
-      '@pnp/odata': 1.3.6_6795127a97b2dcfc80caadca5f95a675
-      tslib: 1.10.0
+      '@pnp/core': 3.9.0
+      '@pnp/queryable': 3.9.0
+      tslib: 2.4.0
     dev: false
-    peerDependencies:
-      '@pnp/common': 1.3.6
-      '@pnp/logging': 1.3.6
-      '@pnp/odata': 1.3.6
-    resolution:
-      integrity: sha512-JGFefu/r0Y9UcG5Vah7cK0VoH/o/9MnoAGZLb3gYbUSAxaqlOuz1QaD5WT9BLJhKCwqa4yeiS1T2rJceJzBI0w==
-  /@types/es6-promise/0.0.33:
+
+  /@rushstack/node-core-library@3.45.5:
+    resolution: {integrity: sha512-KbN7Hp9vH3bD3YJfv6RnVtzzTAwGYIBl7y2HQLY4WEQqRbvE3LgI78W9l9X+cTAXCX//p0EeoiUYNTFdqJrMZg==}
+    dependencies:
+      '@types/node': 12.20.24
+      colors: 1.2.5
+      fs-extra: 7.0.1
+      import-lazy: 4.0.0
+      jju: 1.4.0
+      resolve: 1.17.0
+      semver: 7.3.8
+      timsort: 0.3.0
+      z-schema: 5.0.5
     dev: false
-    resolution:
-      integrity: sha512-HKJFVLCGrWQ/1unEw8JdaTxu6n3EUxmwTxJ6D0O1x0gD8joCsgoTWxEgevb7fp2XIogNjof3KEd+3bJoGne/nw==
-  /@types/lodash/4.14.117:
+
+  /@types/lodash@4.14.117:
+    resolution: {integrity: sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==}
     dev: false
-    resolution:
-      integrity: sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==
-  /@types/node/8.5.8:
+
+  /@types/node@12.20.24:
+    resolution: {integrity: sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==}
     dev: false
-    resolution:
-      integrity: sha512-8KmlRxwbKZfjUHFIt3q8TF5S2B+/E5BaAoo/3mgc5h6FJzqxXkCK/VMetO+IRDtwtU6HUvovHMBn+XRj7SV9Qg==
-  /@types/webpack-env/1.13.1:
+
+  /colors@1.2.5:
+    resolution: {integrity: sha512-erNRLao/Y3Fv54qUa0LBB+//Uf3YwMUmdJinN20yMXm9zdKKqH9wt7R9IIVZ+K7ShzfpLV/Zg8+VyrBJYB4lpg==}
+    engines: {node: '>=0.1.90'}
     dev: false
-    resolution:
-      integrity: sha512-oHyg0NssP2RCpCvE35hhbSqMJRsc5lSW+GFe+Vc65JL+kHII1VMYM+0KeV/z4utFuUqPoQRmq8KMMp7ba0dj6Q==
-  /@types/z-schema/3.16.31:
-    dev: false
-    resolution:
-      integrity: sha1-LrHQCl5Ow/pYx2r94S4YK2bcXBw=
-  /adal-angular/1.0.17:
-    dev: false
-    engines:
-      node: '>=0.8.0'
-    resolution:
-      integrity: sha1-bpNuDkH5HTsqiOf/ypwvb29WLMQ=
-  /commander/2.20.3:
+
+  /commander@2.20.3:
+    resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
+    requiresBuild: true
     dev: false
     optional: true
-    resolution:
-      integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
-  /lodash.get/4.4.2:
+
+  /commander@9.5.0:
+    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
+    engines: {node: ^12.20.0 || >=14}
+    requiresBuild: true
     dev: false
-    resolution:
-      integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
-  /lodash.isequal/4.5.0:
+    optional: true
+
+  /fs-extra@7.0.1:
+    resolution: {integrity: sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==}
+    engines: {node: '>=6 <7 || >=8'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 4.0.0
+      universalify: 0.1.2
     dev: false
-    resolution:
-      integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-  /tslib/1.10.0:
+
+  /graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: false
-    resolution:
-      integrity: sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
-  /tslib/1.9.3:
+
+  /import-lazy@4.0.0:
+    resolution: {integrity: sha512-rKtvo6a868b5Hu3heneU+L4yEQ4jYKLtjpnPeUdK7h0yzXGmyBTypknlkCvHFBqfX9YlorEiMM6Dnq/5atfHkw==}
+    engines: {node: '>=8'}
     dev: false
-    resolution:
-      integrity: sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
-  /validator/8.2.0:
+
+  /jju@1.4.0:
+    resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
     dev: false
-    engines:
-      node: '>= 0.10'
-    resolution:
-      integrity: sha512-Yw5wW34fSv5spzTXNkokD6S6/Oq92d8q/t14TqsS3fAiA1RYnxSFSIZ+CY3n6PGGRCq5HhJTSepQvFUS2QUDxA==
-  /z-schema/3.18.4:
+
+  /jsonfile@4.0.0:
+    resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
+    optionalDependencies:
+      graceful-fs: 4.2.11
+    dev: false
+
+  /lodash.get@4.4.2:
+    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    dev: false
+
+  /lodash.isequal@4.5.0:
+    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    dev: false
+
+  /lru-cache@6.0.0:
+    resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
+    engines: {node: '>=10'}
+    dependencies:
+      yallist: 4.0.0
+    dev: false
+
+  /path-parse@1.0.7:
+    resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
+    dev: false
+
+  /prettier@2.2.1:
+    resolution: {integrity: sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /resolve@1.17.0:
+    resolution: {integrity: sha512-ic+7JYiV8Vi2yzQGFWOkiZD5Z9z7O2Zhm9XMaTxdJExKasieFCr+yXZ/WmXsckHiKl12ar0y6XiXDx3m4RHn1w==}
+    dependencies:
+      path-parse: 1.0.7
+    dev: false
+
+  /semver@7.3.8:
+    resolution: {integrity: sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
+
+  /timsort@0.3.0:
+    resolution: {integrity: sha512-qsdtZH+vMoCARQtyod4imc2nIJwg9Cc7lPRrw9CzF8ZKR0khdr8+2nX80PBhET3tcyTtJDxAffGh2rXH4tyU8A==}
+    dev: false
+
+  /tslib@2.3.1:
+    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
+    dev: false
+
+  /tslib@2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: false
+
+  /tslib@2.4.1:
+    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+    dev: false
+
+  /typescript@4.5.5:
+    resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /universalify@0.1.2:
+    resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
+    engines: {node: '>= 4.0.0'}
+    dev: false
+
+  /validator@13.9.0:
+    resolution: {integrity: sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
+  /yallist@4.0.0:
+    resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+    dev: false
+
+  /z-schema@4.2.4:
+    resolution: {integrity: sha512-YvBeW5RGNeNzKOUJs3rTL4+9rpcvHXt5I051FJbOcitV8bl40pEfcG0Q+dWSwS0/BIYrMZ/9HHoqLllMkFhD0w==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
     dependencies:
       lodash.get: 4.4.2
       lodash.isequal: 4.5.0
-      validator: 8.2.0
-    dev: false
-    hasBin: true
+      validator: 13.9.0
     optionalDependencies:
       commander: 2.20.3
-    resolution:
-      integrity: sha512-DUOKC/IhbkdLKKiV89gw9DUauTV8U/8yJl1sjf6MtDmzevLKOF2duNJ495S3MFVjqZarr+qNGCPbkg4mu4PpLw==
-specifiers:
-  '@microsoft/sp-page-context': 1.9.1
-  '@pnp/common': 1.3.6
-  '@pnp/logging': 1.3.6
-  '@pnp/odata': 1.3.6
-  '@pnp/sp': 1.3.6
+    dev: false
+
+  /z-schema@5.0.5:
+    resolution: {integrity: sha512-D7eujBWkLa3p2sIpJA0d1pr7es+a7m0vFAnZLlCEKq/Ij2k0MLi9Br2UPxoxdYystm5K1yeBGzub0FlYUEWj2Q==}
+    engines: {node: '>=8.0.0'}
+    hasBin: true
+    dependencies:
+      lodash.get: 4.4.2
+      lodash.isequal: 4.5.0
+      validator: 13.9.0
+    optionalDependencies:
+      commander: 9.5.0
+    dev: false
