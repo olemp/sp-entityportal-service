@@ -1,10 +1,16 @@
 import { stringIsNullOrEmpty } from '@pnp/core'
-import { spfi, SPFI, SPFx } from '@pnp/sp'
-import { IContentType } from '@pnp/sp/content-types'
-import { IItem, IItemAddResult, IItemUpdateResult } from '@pnp/sp/items'
-import { IList } from '@pnp/sp/lists'
-import '@pnp/sp/webs'
-import '@pnp/sp/site-users'
+import '@pnp/sp/presets/all'
+import {
+  IContentType,
+  IItem,
+  IItemAddResult,
+  IItemUpdateResult,
+  IList,
+  IWeb,
+  SPFI,
+  SPFx,
+  spfi
+} from '@pnp/sp/presets/all'
 import {
   IEntity,
   IEntityField,
@@ -12,7 +18,6 @@ import {
   INewEntityPermissions,
   ISpEntityPortalServiceParams
 } from './types'
-import { IWeb } from '@pnp/sp/webs'
 
 export class SpEntityPortalService {
   public sp: SPFI
@@ -243,4 +248,4 @@ export class SpEntityPortalService {
   }
 }
 
-export { ISpEntityPortalServiceParams, IEntityField, IEntity, IEntityUrls }
+export { IEntity, IEntityField, IEntityUrls, ISpEntityPortalServiceParams }
