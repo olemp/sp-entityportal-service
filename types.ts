@@ -62,11 +62,6 @@ export interface INewEntityPermissions {
 
 export interface ISpEntityPortalServiceParams {
   /**
-   * SPFx context
-   */
-  spfxContext: any
-
-  /**
    * Portal URL
    */
   portalUrl: string

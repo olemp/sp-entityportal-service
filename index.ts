@@ -23,10 +23,11 @@ export class SpEntityPortalService {
   /**
    * Construct a new `SpEntityPortalService` instance
    *
+   * @param _spfxContext - SPFx context
    * @param _params - Parameters
    */
-  constructor(private _params: ISpEntityPortalServiceParams) {
-    this.sp = spfi(_params.portalUrl).using(SPFx(_params.spfxContext))
+  constructor(private _spfxContext: any, private _params: ISpEntityPortalServiceParams) {
+    this.sp = spfi(_params.portalUrl).using(SPFx(_spfxContext))
     this.web = this.sp.web
     this._entityList = this.web.lists.getByTitle(this._params.listName)
     this._entityContentType = this._params.contentTypeId
@@ -40,7 +41,7 @@ export class SpEntityPortalService {
    * @param params - Params
    */
   public usingParams(params: Partial<ISpEntityPortalServiceParams>) {
-    return new SpEntityPortalService({ ...this._params, ...params })
+    return new SpEntityPortalService(this._spfxContext, { ...this._params, ...params })
   }
 
   /**
