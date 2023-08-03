@@ -12,9 +12,11 @@ import {
   INewEntityPermissions,
   ISpEntityPortalServiceParams
 } from './types'
+import { IWeb } from '@pnp/sp/webs'
 
 export class SpEntityPortalService {
   public sp: SPFI
+  public web: IWeb
   private _entityList: IList
   private _entityContentType: IContentType
 
@@ -25,6 +27,7 @@ export class SpEntityPortalService {
    */
   constructor(private _params: ISpEntityPortalServiceParams) {
     this.sp = spfi(_params.portalUrl).using(SPFx(_params.spfxContext))
+    this.web = this.sp.web
     this._entityList = this.sp.web.lists.getByTitle(this._params.listName)
     this._entityContentType = this._params.contentTypeId
       ? this.sp.web.contentTypes.getById(this._params.contentTypeId)
