@@ -39,7 +39,7 @@ export class SpEntityPortalService {
    *
    * @param params - Params
    */
-  public usingParams(params: ISpEntityPortalServiceParams) {
+  public usingParams(params: Partial<ISpEntityPortalServiceParams>) {
     return new SpEntityPortalService({ ...this._params, ...params })
   }
 
