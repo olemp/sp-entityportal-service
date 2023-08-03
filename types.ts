@@ -72,11 +72,6 @@ export interface ISpEntityPortalServiceParams {
   portalUrl: string
 
   /**
-   * Content type ID for entity
-   */
-  contentTypeId: string
-
-  /**
    * List name for the entities
    */
   listName: string
@@ -92,7 +87,12 @@ export interface ISpEntityPortalServiceParams {
   urlFieldName: string
 
   /**
-   * Field prefix for entity fields
+   * Field prefix for entity fields (optional)
    */
   fieldPrefix?: string
+
+  /**
+   * Content type ID for entity (optional)
+   */
+  contentTypeId?: string
 }
