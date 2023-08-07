@@ -150,14 +150,16 @@ export class SpEntityPortalService {
    *
    * @param identity Identity
    * @param properties Properties
+   * @param eTag ETag (optional)
    */
   public async updateEntityItem(
     identity: string,
-    properties: Record<string, string>
+    properties: Record<string, string>,
+    eTag: string = '*'
   ): Promise<IItemUpdateResult> {
     try {
       const item = await this.getEntityItem(identity)
-      return await this._entityList.items.getById(item.Id).update(properties)
+      return await this._entityList.items.getById(item.Id).update(properties, eTag)
     } catch (e) {
       throw e
     }
